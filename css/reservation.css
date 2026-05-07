@@ -1,0 +1,125 @@
+.reservation-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.calendar {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.calendar input {
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.slot {
+  background: #e9ecef;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.slot:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.slot.selected {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ── Summary Section ── */
+.summary {
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+.summary h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-color, #1a1a2e);
+}
+
+.summary-box {
+  background: var(--primary-color);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(36, 177, 253, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 14px;
+}
+
+.summary-row:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-row i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.summary-row .label {
+  font-weight: 600;
+  min-width: 90px;
+}
+
+.summary-row.total {
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-row.total .value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.summary .btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: white;
+  color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.summary .btn:hover {
+  opacity: 0.9;
+}

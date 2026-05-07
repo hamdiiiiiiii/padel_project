@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/payment.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+
+<!-- start HEADER section -->
+<header class="header">
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-wrapper">
+
+        <a href="index.html" class="logo">
+          <span class="logo-icon">🎾</span>
+          <span class="logo-text">PadelPro</span>
+        </a>
+
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="booking.html" class="nav-link active accordion">Book Court</a></li>
+          <li><a href="#" class="nav-link">About Us</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a href="login_signup.html" class="btn btn-outline">Login</a>
+          <a href="login_signup.html" class="btn btn-primary">Register</a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- end header section -->
+
+
+<!-- start PAYMENT SECTION -->
+<section class="payment-section">
+  <div class="container">
+
+    <div class="section-header">
+      <h2 class="section-title">Payment</h2>
+      <p class="section-subtitle">Complete your booking securely</p>
+    </div>
+
+    <!-- BOOKING SUMMARY -->
+    <div class="card">
+      <h3>Booking Summary</h3>
+
+      <p><strong>Court:</strong> <span id="court"></span></p>
+      <p><strong>Date:</strong> <span id="date"></span></p>
+      <p><strong>Time:</strong> <span id="time"></span></p>
+
+      <div class="price-box">
+        <span>Total:</span>
+        <span id="price" class="price"></span> EGP
+      </div>
+    </div>
+
+
+    <!-- PAYMENT FORM -->
+    <div class="card">
+
+      <h3>Payment Method</h3>
+
+      <label class="radio">
+        <input type="radio" name="pay" checked>
+        Credit / Debit Card
+      </label>
+
+      <div class="form">
+
+        <input type="text" placeholder="Card Holder Name">
+        <input type="text" placeholder="Card Number">
+
+        <div class="row">
+          <input type="text" placeholder="MM/YY">
+          <input type="text" placeholder="CVV">
+        </div>
+
+      </div>
+
+      <button id="payBtn" class="btn btn-primary btn-block">
+        Confirm Payment
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- end payment section -->
+
+<script src="js/payment.js"></script>
+</body>
+</html>
