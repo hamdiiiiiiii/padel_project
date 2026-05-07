@@ -1,8 +1,3 @@
-<?php
-// footer.php - Reusable footer component
-// Usage: <?php include 'footer.php'; ?>
-?>
-<!--start Footer Section -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -47,4 +42,5 @@
     </div>
   </div>
 </footer>
-<!--end Footer Section -->
+</body>
+</html>

@@ -7,7 +7,14 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        $this->render('auth/login');
+        if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
+            define('REGISTER_HANDLED_BY_CONTROLLER', true);
+        }
+
+        $this->render('auth/login', [
+            'activePage' => '',
+            'pageStyles' => ['css/login_signup.css'],
+        ]);
     }
 
     public function doLogin(): void
@@ -22,16 +29,21 @@ class AuthController extends Controller
         $userModel = new User();
         $user = $userModel->findByEmail($email);
 
-        if (
-            $user &&
-            (password_verify($password, $user['password']) || $password === $user['password'])
-        ) {
+        $storedHash = $user['password_hash'] ?? ($user['password'] ?? '');
+
+        if ($user && $storedHash !== '' && password_verify($password, $storedHash)) {
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'email' => $user['email'],
+                'role' => $user['role'] ?? 'user',
             ];
-            $this->redirect('/dashboard');
+            
+            if (($_SESSION['user']['role'] ?? '') === 'admin') {
+                $this->redirect('/views/admin/admin.php');
+            } else {
+                $this->redirect('/home');
+            }
         }
 
         $this->redirect('/login');
@@ -39,32 +51,94 @@ class AuthController extends Controller
 
     public function register(): void
     {
-        $this->render('auth/register');
+        if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
+            define('REGISTER_HANDLED_BY_CONTROLLER', true);
+        }
+
+        $this->render('auth/register', [
+            'activePage' => '',
+            'pageStyles' => ['css/login_signup.css'],
+        ]);
     }
 
     public function doRegister(): void
     {
-        $name = trim($_POST['name'] ?? '');
+        $firstName = trim($_POST['first_name'] ?? '');
+        $lastName = trim($_POST['last_name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+        $name = trim($firstName . ' ' . $lastName);
+
+        if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
+            define('REGISTER_HANDLED_BY_CONTROLLER', true);
+        }
 
         if ($name === '' || $email === '' || $password === '') {
-            $this->redirect('/register');
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'Name, email, and password are required.',
+            ]);
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'Please enter a valid email address.',
+            ]);
+            return;
+        }
+
+        if (strlen($password) < 6) {
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'Password must be at least 6 characters.',
+            ]);
+            return;
+        }
+
+        if ($password !== $confirmPassword) {
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'Password and confirm password do not match.',
+            ]);
+            return;
         }
 
         $userModel = new User();
         $existing = $userModel->findByEmail($email);
 
         if ($existing) {
-            $this->redirect('/login');
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'This email is already registered.',
+            ]);
+            return;
         }
 
-        $userModel->create([
+        $created = $userModel->create([
             'name' => $name,
             'email' => $email,
             'password' => $password,
+            'role' => 'user',
         ]);
 
+        if (!$created) {
+            $this->render('auth/register', [
+                'activePage' => '',
+                'pageStyles' => ['css/login_signup.css'],
+                'error' => 'Failed to create account. Please try again.',
+            ]);
+            return;
+        }
+
+        $_SESSION['auth_success'] = 'Registration successful. Please login.';
         $this->redirect('/login');
     }
 
