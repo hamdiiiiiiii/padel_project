@@ -1,13 +1,11 @@
 <?php
-
 session_start();
-
 require_once __DIR__ . '/core/Database.php';
-require_once __DIR__ . '/controllers/HomeController.php';
 require_once __DIR__ . '/controllers/CourtController.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/UserController.php';
 require_once __DIR__ . '/controllers/BookingController.php';
+require_once __DIR__ . '/controllers/HomeController.php';
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
@@ -26,7 +24,6 @@ if ($path === '/' || $path === '/home') {
     (new HomeController())->index();
     exit;
 }
-/*
 if ($path === '/' || $path === '/courts') {
     (new CourtController())->index();
     exit;
@@ -36,7 +33,7 @@ if (preg_match('#^/court/(\d+)$#', $path, $matches)) {
     (new CourtController())->show((int) $matches[1]);
     exit;
 }
-*/
+
 if ($path === '/login' && $method === 'GET') {
     (new AuthController())->login();
     exit;
@@ -67,6 +64,10 @@ if ($path === '/dashboard') {
     exit;
 }
 
+if ($path === '/reservations') {
+    (new UserController())->reservations();
+    exit;
+}
 
 if ($path === '/booking') {
     (new BookingController())->booking();
