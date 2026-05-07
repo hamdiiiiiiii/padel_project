@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reservation</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/reservation.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 (free icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!--start Header reservation Section -->
+
+    <header class="header">
+      <nav class="navbar">
+        <div class="container">
+          <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+              <span class="logo-icon">🎾</span>
+              <span class="logo-text">PadelPro</span>
+            </a>
+            <ul class="nav-menu">
+              <li class="nav-item">
+                <a href="index.html" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="booking.html" class="nav-link active">Book Court</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">About Us</a>
+              </li>
+            </ul>
+            <div class="nav-actions">
+              <!-- Profile Icon (visible when logged out, shows dropdown on click) -->
+              <div class="profile-dropdown">
+                <button
+                  class="profile-icon-btn"
+                  id="profileIconBtn"
+                  aria-label="Profile menu"
+                >
+                  <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="dropdown-menu" id="profileDropdown">
+                  <div class="dropdown-header" id="userInfoHeader">
+                    <i class="fas fa-user"></i>
+                    <span>Guest User</span>
+                  </div>
+                  <a
+                    href="login_signup.html"
+                    class="dropdown-item"
+                    id="loginDropdownItem"
+                  >
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                  </a>
+                  <a
+                    href="login_signup.html"
+                    class="dropdown-item"
+                    id="registerDropdownItem"
+                  >
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a
+                    href="#"
+                    class="dropdown-item"
+                    id="myProfileItem"
+                    style="display: none"
+                  >
+                    <i class="fas fa-id-card"></i>
+                    My Profile
+                  </a>
+                  <a
+                    href="#"
+                    class="dropdown-item"
+                    id="myBookingsItem"
+                    style="display: none"
+                  >
+                    <i class="fas fa-calendar-alt"></i>
+                    My Bookings
+                  </a>
+                  <a
+                    href="#"
+                    class="dropdown-item"
+                    id="logoutItem"
+                    style="display: none"
+                  >
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                  </a>
+                </div>
+              </div>
+              <a href="login_signup.html" class="btn btn-outline" id="loginBtn"
+                >Login</a
+              >
+              <a
+                href="login_signup.html"
+                class="btn btn-primary"
+                id="registerBtn"
+                >Register</a
+              >
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- end Header reservation section -->
+
+    <section style="margin-top: 120px">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Complete Reservation</h2>
+        </div>
+
+        <!-- Selected Court -->
+        <div class="reservation-card">
+          <h3 id="courtName"></h3>
+          <p id="courtPrice"></p>
+        </div>
+
+        <!-- Calendar -->
+        <div class="calendar">
+          <h3>Select Date</h3>
+          <input type="date" id="dateInput" />
+        </div>
+
+        <!-- Time Slots -->
+        <div class="slots-grid" id="slotsContainer"></div>
+
+        <!-- Summary -->
+
+        <div class="summary">
+          <h3>Booking Summary</h3>
+
+          <div class="summary-box">
+            <div class="summary-row">
+              <i class="fas fa-table-tennis"></i>
+              <span class="label">Court:</span>
+              <span class="value" id="summaryCourtName"></span>
+            </div>
+
+            <div class="summary-row">
+              <i class="fas fa-calendar-alt"></i>
+              <span class="label">Date:</span>
+              <span class="value" id="summaryDate"></span>
+            </div>
+
+            <div class="summary-row">
+              <i class="fas fa-clock"></i>
+              <span class="label">Time Slots:</span>
+              <span class="value" id="summarySlots"></span>
+            </div>
+
+            <div class="summary-row total">
+              <i class="fas fa-tag"></i>
+              <span class="label">Total Price:</span>
+              <span class="value" id="summaryPrice"></span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="goToPayment()">
+            Confirm Booking
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <script src="js/reservation.js"></script>
+  </body>
+</html>

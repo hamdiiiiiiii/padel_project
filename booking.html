@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Court</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/book.css">
+  <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+<!--start Header booking Section -->
+
+    <header class="header">
+      <nav class="navbar">
+        <div class="container">
+          <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+              <span class="logo-icon">🎾</span>
+              <span class="logo-text">PadelPro</span>
+            </a>
+            <ul class="nav-menu">
+              <li class="nav-item">
+                <a href="index.html" class="nav-link ">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="booking.html" class="nav-link active">Book Court</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">About Us</a>
+              </li>
+            </ul>
+            <div class="nav-actions">
+
+              <!-- Profile Icon  -->
+              <div class="profile-dropdown">
+                <button class="profile-icon-btn" id="profileIconBtn" aria-label="Profile menu">
+                  <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="dropdown-menu" id="profileDropdown">
+                  <div class="dropdown-header" id="userInfoHeader">
+                    <i class="fas fa-user"></i>
+                    <span>Guest User</span>
+                  </div>
+                  <a href="login_signup.html" class="dropdown-item" id="loginDropdownItem">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                  </a>
+                  <a href="login_signup.html" class="dropdown-item" id="registerDropdownItem">
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="#" class="dropdown-item" id="myProfileItem" style="display: none;">
+                    <i class="fas fa-id-card"></i>
+                    My Profile
+                  </a>
+                  <a href="#" class="dropdown-item" id="myBookingsItem" style="display: none;">
+                    <i class="fas fa-calendar-alt"></i>
+                    My Bookings
+                  </a>
+                  <a href="#" class="dropdown-item" id="logoutItem" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                  </a>
+                </div>
+              </div>
+              <a href="login_signup.html" class="btn btn-outline" id="loginBtn">Login</a>
+              <a href="login_signup.html" class="btn btn-primary" id="registerBtn">Register</a>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- end Header booking section -->
+
+<section class="courts-preview" style="margin-top:120px;">
+  <div class="container">
+
+    <div class="section-header">
+      <h2 class="section-title">Choose Your Court</h2>
+      <p class="section-subtitle">
+        Select a court to continue your booking
+      </p>
+    </div>
+
+    <div class="courts-grid">
+
+      <!-- Court 1 -->
+      <div class="court-card" onclick="goToReservation('Central Court',400)">
+        <div class="court-image">
+          <span class="court-icon">🏟️</span>
+          <span class="court-status available">Available</span>
+        </div>
+        <div class="court-details">
+          <h3 class="court-name">Central Court</h3>
+          <p class="court-location">📍 Mivida</p>
+          <div class="court-info">
+            <span class="court-price">EGP400/hour</span>
+            <span class="court-type">Indoor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court 2 -->
+      <div class="court-card" onclick="goToReservation('Lakeside Court',450)">
+        <div class="court-image">
+          <span class="court-icon">🏟️</span>
+          <span class="court-status available">Available</span>
+        </div>
+        <div class="court-details">
+          <h3 class="court-name">Lakeside Court</h3>
+          <p class="court-location">📍 Hyde Park Sports Club</p>
+          <div class="court-info">
+            <span class="court-price">EGP450/hour</span>
+            <span class="court-type">Outdoor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court 3 -->
+      <div class="court-card" onclick="goToReservation('Elite Arena',350)">
+        <div class="court-image">
+          <span class="court-icon">🏟️</span>
+          <span class="court-status busy">Popular</span>
+        </div>
+        <div class="court-details">
+          <h3 class="court-name">Elite Arena</h3>
+          <p class="court-location">📍 Cairo Stadium</p>
+          <div class="court-info">
+            <span class="court-price">EGP350/hour</span>
+            <span class="court-type">Indoor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court 4 -->
+      <div class="court-card" onclick="goToReservation('Pro Court',500)">
+        <div class="court-image">
+          <span class="court-icon">🏟️</span>
+          <span class="court-status available">Available</span>
+        </div>
+        <div class="court-details">
+          <h3 class="court-name">Pro Court</h3>
+          <p class="court-location">📍 New Cairo Club</p>
+          <div class="court-info">
+            <span class="court-price">EGP500/hour</span>
+            <span class="court-type">Premium</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script src="js/book.js"></script>
+</body>
+</html>
