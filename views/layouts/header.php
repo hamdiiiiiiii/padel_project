@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PadelPro</title>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/base.css">
     <?php if (!empty($pageStyles) && is_array($pageStyles)): ?>
         <?php foreach ($pageStyles as $styleFile): ?>
             <link rel="stylesheet" href="<?php echo BASE_URL . '/' . ltrim($styleFile, '/'); ?>">
@@ -27,7 +27,9 @@
                 </a>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="<?php echo BASE_URL; ?>/courts" class="nav-link <?php echo $activePage === 'courts' ? 'active' : ''; ?>">Browse Courts</a>
+                       <a href="<?php echo BASE_URL; ?>/home" class="nav-link <?php echo $activePage === 'home' ? 'active' : ''; ?>">
+    Home
+</a>
                     </li>
                     <li class="nav-item">
                         <a href="<?php echo BASE_URL; ?>/booking" class="nav-link <?php echo $activePage === 'booking' ? 'active' : ''; ?>">Book Court</a>

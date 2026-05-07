@@ -6,7 +6,7 @@ class BookingController extends Controller
 {
     public function booking(): void
     {
-        $this->render('booking/index', [
+        $this->render('booking/booking', [
             'activePage' => 'booking',
             'pageStyles' => ['css/book.css'],
         ]);
@@ -14,7 +14,7 @@ class BookingController extends Controller
 
     public function payment(): void
     {
-        $this->render('payment/index', [
+        $this->render('payment/payment', [
             'activePage' => 'booking',
             'pageStyles' => ['css/payment.css'],
         ]);
@@ -22,7 +22,7 @@ class BookingController extends Controller
 
     public function reservation(): void
     {
-        $this->render('reservation/index', [
+        $this->render('reservation', [
             'activePage' => 'booking',
             'pageStyles' => ['css/reservation.css'],
         ]);
