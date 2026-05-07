@@ -60,7 +60,7 @@ if ($path === '/logout') {
 }
 
 if ($path === '/dashboard') {
-    (new UserController())->dashboard();
+    (new UserController())->reservations();
     exit;
 }
 

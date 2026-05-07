@@ -1,8 +1,13 @@
 <?php
 $activePage = 'booking';
-$pageStyles = ['/css/booking.css'];
+$pageStyles = ['css/book.css'];
 ?>
-
+<?php
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$folder = '/padel_project/padel_project';
+define('BASE_URL', $protocol . '://' . $host . $folder);
+?>  
 <div class="booking-page">
     <div class="container">
         <div class="page-header">
@@ -18,7 +23,7 @@ $pageStyles = ['/css/booking.css'];
             </div>
             
             <div class="courts-grid">
-                <div class="court-card" onclick="goToReservation('Central Court', 400)">
+                <div class="court-card" onclick="goToReservation(1, 'Central Court', 400)">
                     <div class="court-card-header">
                         <span class="court-icon">🏟️</span>
                         <span class="status available">Available</span>
@@ -30,7 +35,7 @@ $pageStyles = ['/css/booking.css'];
                     </div>
                 </div>
 
-                <div class="court-card" onclick="goToReservation('Lakeside Court', 450)">
+                <div class="court-card" onclick="goToReservation(2, 'Lakeside Court', 450)">
                     <div class="court-card-header">
                         <span class="court-icon">🏟️</span>
                         <span class="status available">Available</span>
@@ -42,7 +47,7 @@ $pageStyles = ['/css/booking.css'];
                     </div>
                 </div>
 
-                <div class="court-card" onclick="goToReservation('Elite Arena', 350)">
+                <div class="court-card" onclick="goToReservation(3, 'Elite Arena', 350)">
                     <div class="court-card-header">
                         <span class="court-icon">🏟️</span>
                         <span class="status popular">Popular</span>
@@ -64,7 +69,7 @@ $pageStyles = ['/css/booking.css'];
             </div>
             
             <div class="courts-grid">
-                <div class="court-card" onclick="goToReservation('Pro Court', 500)">
+                <div class="court-card" onclick="goToReservation(4, 'Pro Court', 500)">
                     <div class="court-card-header">
                         <span class="court-icon">🏟️</span>
                         <span class="status popular">Popular</span>
@@ -81,7 +86,7 @@ $pageStyles = ['/css/booking.css'];
 </div>
 
 <script>
-function goToReservation(courtName, price) {
-    window.location.href = '<?php echo BASE_URL; ?>/reservation?court=' + encodeURIComponent(courtName) + '&price=' + price;
+function goToReservation(courtId, courtName, price) {
+    window.location.href = '<?php echo BASE_URL; ?>/reservation?court_id=' + courtId + '&court=' + encodeURIComponent(courtName) + '&price=' + price;
 }
 </script>

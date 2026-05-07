@@ -1,9 +1,11 @@
 let selectedTimes = [];
 let selectedDate = "";
 
-// Load court info
-const court = localStorage.getItem("court");
-const pricePerHour = parseInt(localStorage.getItem("price")) || 400;
+// Extract URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const courtId = parseInt(urlParams.get("court_id")) || 0;
+const court = urlParams.get("court") || "Selected Court";
+const pricePerHour = parseInt(urlParams.get("price")) || 400;
 
 // UI setup
 document.getElementById("courtName").innerText = court;
@@ -60,12 +62,10 @@ function updateSummary() {
 
 // GO TO PAYMENT
 function goToPayment() {
-  const currentUser = localStorage.getItem("padelpro_current_user");
-
-  // prevent booking without login
-  if (!currentUser) {
+  // prevent booking without login - checking the PHP session variable passed in views/reservation.php
+  if (typeof IS_LOGGED_IN !== 'undefined' && !IS_LOGGED_IN) {
     alert("You must login first to continue booking!");
-    window.location.href = "login";
+    window.location.href = BASE_URL_JS + "/login";
     return;
   }
 
@@ -75,13 +75,22 @@ function goToPayment() {
     return;
   }
 
-  const bookingData = {
-    court: court,
-    date: selectedDate,
-    time: selectedTimes.join(", "),
-    price: selectedTimes.length * pricePerHour
-  };
+  const totalPrice = selectedTimes.length * pricePerHour;
+  
+  // Extract start_time and end_time (assuming consecutive slots, or just passing the first and last bounds)
+  const firstSlot = selectedTimes[0].split(' - ');
+  const lastSlot = selectedTimes[selectedTimes.length - 1].split(' - ');
+  const startTime = firstSlot[0];
+  const endTime = lastSlot[1];
 
-  localStorage.setItem("padelpro_booking", JSON.stringify(bookingData));
-  window.location.href = "payment";
+  const params = new URLSearchParams({
+    court_id: courtId,
+    court_name: court,
+    date: selectedDate,
+    start_time: startTime,
+    end_time: endTime,
+    price: totalPrice
+  });
+
+  window.location.href = BASE_URL_JS + "/payment?" + params.toString();
 }

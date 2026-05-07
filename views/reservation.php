@@ -52,4 +52,8 @@
     </div>
 </section>
 
+<script>
+    const BASE_URL_JS = '<?php echo BASE_URL; ?>';
+    const IS_LOGGED_IN = <?php echo isset($_SESSION['user']) ? 'true' : 'false'; ?>;
+</script>
 <script src="<?php echo BASE_URL; ?>/js/reservation.js"></script>

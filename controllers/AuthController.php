@@ -38,7 +38,12 @@ class AuthController extends Controller
                 'email' => $user['email'],
                 'role' => $user['role'] ?? 'user',
             ];
-            $this->redirect('/home');
+            
+            if (($_SESSION['user']['role'] ?? '') === 'admin') {
+                $this->redirect('/views/admin/admin.php');
+            } else {
+                $this->redirect('/home');
+            }
         }
 
         $this->redirect('/login');

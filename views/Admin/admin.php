@@ -6,7 +6,7 @@ session_start();
 require_once __DIR__ . '/../../core/Database.php';
 
 // Admin access check
-if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+if(!isset($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'admin') {
     header('Location: /padel_project/padel_project/login');
     exit();
 }

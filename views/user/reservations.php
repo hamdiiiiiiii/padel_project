@@ -23,7 +23,7 @@ $selectParts = [
     in_array('end_time', $colNames, true) ? 'r.end_time' : 'NULL AS end_time',
     in_array('total_price', $colNames, true) ? 'r.total_price' : 'NULL AS total_price',
     in_array('status', $colNames, true) ? 'r.status' : "'confirmed' AS status",
-    in_array('payment_status', $colNames, true) ? 'r.payment_status' : "'pending' AS payment_status',
+    in_array('payment_status', $colNames, true) ? 'r.payment_status' : "'pending' AS payment_status",
 ];
 
 $sql = 'SELECT ' . implode(', ', $selectParts) . '

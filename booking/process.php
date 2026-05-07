@@ -7,9 +7,11 @@ session_start();
 
 require_once __DIR__ . '/../core/Database.php';
 
-$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+// BASE_URL must point to the project root (two levels up from /booking/process.php)
 if (!defined('BASE_URL')) {
-    define('BASE_URL', ($basePath === '/' || $basePath === '.') ? '' : $basePath);
+    $scriptDir = dirname(dirname($_SERVER['SCRIPT_NAME']));
+    $basePath = rtrim($scriptDir, '/');
+    define('BASE_URL', ($basePath === '/' || $basePath === '.' || $basePath === '') ? '' : $basePath);
 }
 
 if (!isset($_SESSION['user'])) {
@@ -25,39 +27,45 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $userId = (int) $_SESSION['user']['id'];
 $courtId = (int) ($_POST['court_id'] ?? 0);
 $date = trim($_POST['date'] ?? '');
-$startTime = trim($_POST['start_time'] ?? '');
-$endTime = trim($_POST['end_time'] ?? '');
+$rawStartTime = trim($_POST['start_time'] ?? '');
+$rawEndTime = trim($_POST['end_time'] ?? '');
 $totalPrice = (float) ($_POST['total_price'] ?? 0);
 $paymentType = trim($_POST['payment_type'] ?? 'on_court');
 
-if ($courtId <= 0 || $date === '' || $startTime === '' || $endTime === '') {
+if ($courtId <= 0 || $date === '' || $rawStartTime === '' || $rawEndTime === '') {
     die('Missing required booking data.');
 }
+
+// Convert "1 PM" format to MySQL "13:00:00" format
+$startTime = date('H:i:s', strtotime($rawStartTime));
+$endTime = date('H:i:s', strtotime($rawEndTime));
 
 $db = Database::getInstance()->getConnection();
 
 try {
     $db->beginTransaction();
 
-    $slotStmt = $db->prepare(
-        'SELECT id, is_available
-         FROM time_slots
+    // Check for conflicting reservations
+    $conflictStmt = $db->prepare(
+        'SELECT id
+         FROM reservations
          WHERE court_id = :court_id
-           AND slot_date = :slot_date
-           AND start_time = :start_time
-           AND end_time = :end_time
+           AND reservation_date = :slot_date
+           AND status != "cancelled"
+           AND (
+               (start_time < :end_time AND end_time > :start_time)
+           )
          FOR UPDATE'
     );
-    $slotStmt->execute([
+    $conflictStmt->execute([
         'court_id' => $courtId,
         'slot_date' => $date,
         'start_time' => $startTime,
         'end_time' => $endTime,
     ]);
-    $slot = $slotStmt->fetch();
-
-    if (!$slot || (int) $slot['is_available'] !== 1) {
-        throw new RuntimeException('Selected time slot is no longer available.');
+    
+    if ($conflictStmt->fetch()) {
+        throw new RuntimeException('Selected time slot is already booked.');
     }
 
     $columns = $db->query('SHOW COLUMNS FROM reservations')->fetchAll();
@@ -69,10 +77,6 @@ try {
     if (in_array('reservation_date', $colNames, true)) {
         $insertFields[] = 'reservation_date';
         $insertParams['reservation_date'] = $date;
-    }
-    if (in_array('reservation_time', $colNames, true)) {
-        $insertFields[] = 'reservation_time';
-        $insertParams['reservation_time'] = substr($startTime, 0, 5) . ' - ' . substr($endTime, 0, 5);
     }
     if (in_array('start_time', $colNames, true)) {
         $insertFields[] = 'start_time';
@@ -105,9 +109,6 @@ try {
 
     $insertStmt = $db->prepare($insertSql);
     $insertStmt->execute($insertParams);
-
-    $updateSlotStmt = $db->prepare('UPDATE time_slots SET is_available = 0 WHERE id = :id');
-    $updateSlotStmt->execute(['id' => (int) $slot['id']]);
 
     $db->commit();
     header('Location: ' . BASE_URL . '/reservations');

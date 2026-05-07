@@ -1,8 +1,7 @@
 RewriteEngine On
 
-# Keep direct access to existing files/folders (css, js, images, etc.)
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
+# Keep direct access to existing files (css, js, images, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
 # Route everything else to front controller

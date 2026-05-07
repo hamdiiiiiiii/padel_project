@@ -7,9 +7,11 @@ session_start();
 
 require_once __DIR__ . '/../core/Database.php';
 
-$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+// BASE_URL must point to the project root (two levels up from /booking/cancel.php)
 if (!defined('BASE_URL')) {
-    define('BASE_URL', ($basePath === '/' || $basePath === '.') ? '' : $basePath);
+    $scriptDir = dirname(dirname($_SERVER['SCRIPT_NAME']));
+    $basePath = rtrim($scriptDir, '/');
+    define('BASE_URL', ($basePath === '/' || $basePath === '.' || $basePath === '') ? '' : $basePath);
 }
 
 if (!isset($_SESSION['user'])) {
@@ -50,34 +52,8 @@ try {
         ]);
     }
 
-    $slotDate = $reservation['reservation_date'] ?? null;
-    $startTime = $reservation['start_time'] ?? null;
-    $endTime = $reservation['end_time'] ?? null;
-
-    if (($startTime === null || $endTime === null) && !empty($reservation['reservation_time'])) {
-        $parts = explode('-', (string) $reservation['reservation_time']);
-        if (count($parts) === 2) {
-            $startTime = trim($parts[0]) . ':00';
-            $endTime = trim($parts[1]) . ':00';
-        }
-    }
-
-    if (!empty($slotDate) && !empty($startTime) && !empty($endTime)) {
-        $freeSlot = $db->prepare(
-            'UPDATE time_slots
-             SET is_available = 1
-             WHERE court_id = :court_id
-               AND slot_date = :slot_date
-               AND start_time = :start_time
-               AND end_time = :end_time'
-        );
-        $freeSlot->execute([
-            'court_id' => (int) $reservation['court_id'],
-            'slot_date' => $slotDate,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-        ]);
-    }
+    // The time_slots table has been removed from the design.
+    // Cancelling a booking is handled simply by updating its status to 'cancelled' in the reservations table.
 
     $db->commit();
     header('Location: ' . BASE_URL . '/reservations');
