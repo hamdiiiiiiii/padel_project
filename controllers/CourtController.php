@@ -10,7 +10,10 @@ class CourtController extends Controller
         $courtModel = new Court();
         $courts = $courtModel->getAll();
 
-        $this->render('courts/index', ['courts' => $courts]);
+        $this->render('courts/index', [
+            'courts' => $courts,
+            'activePage' => 'courts',
+        ]);
     }
 
     public function show(int $id): void
@@ -24,6 +27,9 @@ class CourtController extends Controller
             return;
         }
 
-        $this->render('courts/show', ['court' => $court]);
+        $this->render('courts/show', [
+            'court' => $court,
+            'activePage' => 'courts',
+        ]);
     }
 }

@@ -65,7 +65,7 @@ function goToPayment() {
   // prevent booking without login
   if (!currentUser) {
     alert("You must login first to continue booking!");
-    window.location.href = "login_signup.html";
+    window.location.href = "login";
     return;
   }
 
@@ -83,5 +83,5 @@ function goToPayment() {
   };
 
   localStorage.setItem("padelpro_booking", JSON.stringify(bookingData));
-  window.location.href = "payment.html";
+  window.location.href = "payment";
 }

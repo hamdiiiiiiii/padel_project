@@ -7,7 +7,10 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        $this->render('auth/login');
+        $this->render('auth/login', [
+            'activePage' => '',
+            'pageStyles' => ['css/login_signup.css'],
+        ]);
     }
 
     public function doLogin(): void
@@ -39,7 +42,10 @@ class AuthController extends Controller
 
     public function register(): void
     {
-        $this->render('auth/register');
+        $this->render('auth/register', [
+            'activePage' => '',
+            'pageStyles' => ['css/login_signup.css'],
+        ]);
     }
 
     public function doRegister(): void
