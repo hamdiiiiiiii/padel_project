@@ -20,6 +20,17 @@ class UserController extends Controller
             'user' => $_SESSION['user'],
         ]);
     }
+
+    public function reservations(): void
+    {
+        if (!$this->isLoggedIn()) {
+            $this->redirect('/login');
+        }
+
+        $this->render('user/reservations', [
+            'activePage' => '',
+        ]);
+    }
 }
 =======
 <?php

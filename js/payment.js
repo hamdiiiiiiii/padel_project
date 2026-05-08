@@ -6,7 +6,7 @@ window.addEventListener("load", () => {
 
   if (!user) {
     alert("You must login first!");
-    window.location.href = "login_signup.html";
+    window.location.href = "login";
     return;
   }
 
@@ -15,7 +15,7 @@ window.addEventListener("load", () => {
 
   if (!booking) {
     alert("No booking found!");
-    window.location.href = "booking.html";
+    window.location.href = "booking";
     return;
   }
 
@@ -34,7 +34,7 @@ window.addEventListener("load", () => {
     localStorage.removeItem("padelpro_booking");
 
     // redirect
-    window.location.href = "index.html";
+    window.location.href = "courts";
   });
 
 =======

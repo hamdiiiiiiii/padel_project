@@ -1,60 +1,60 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <?php
 if (!isset($activePage)) $activePage = '';
 ?>
 
+=======
+<?php if (!isset($activePage)) { $activePage = ''; } ?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PadelPro</title>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/base.css">
+    <?php if (!empty($pageStyles) && is_array($pageStyles)): ?>
+        <?php foreach ($pageStyles as $styleFile): ?>
+            <link rel="stylesheet" href="<?php echo BASE_URL . '/' . ltrim($styleFile, '/'); ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+>>>>>>> 33f0fd7199ed9b6d860ae47c0bc1bd16e492bba8
 <header class="header">
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-wrapper">
-
-        <a href="index.php" class="logo">
-          <span class="logo-icon">🎾</span>
-          <span class="logo-text">PadelPro</span>
-        </a>
-
-        <ul class="nav-menu">
-          <li class="nav-item">
-            <a href="index.php" class="nav-link <?= $activePage === 'home' ? 'active' : '' ?>">Home</a>
-          </li>
-
-          <li class="nav-item">
-            <a href="index.php?page=booking">Book Court</a>
-           </li>
-
-          <li class="nav-item">
-            <a href="aboutus.php" class="nav-link <?= $activePage === 'about' ? 'active' : '' ?>">About Us</a>
-          </li>
-        </ul>
-
-        <div class="nav-actions">
-
-          <!-- Profile -->
-          <div class="profile-dropdown">
-            <button class="profile-icon-btn" id="profileIconBtn">
-              <i class="fas fa-user-circle"></i>
-            </button>
-
-            <div class="dropdown-menu" id="profileDropdown">
-
-              <div class="dropdown-header" id="userInfoHeader">
-                <i class="fas fa-user"></i>
-                <span>Guest User</span>
-              </div>
-
-              <div class="dropdown-divider"></div>
-
-              <a href="#" class="dropdown-item">My Profile</a>
-              <a href="#" class="dropdown-item">My Bookings</a>
-              <a href="#" class="dropdown-item" id="logoutItem">Logout</a>
-
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="<?php echo BASE_URL; ?>/courts" class="logo">
+                    <span class="logo-icon">🎾</span>
+                    <span class="logo-text">PadelPro</span>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                       <a href="<?php echo BASE_URL; ?>/home" class="nav-link <?php echo $activePage === 'home' ? 'active' : ''; ?>">
+    Home
+</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo BASE_URL; ?>/booking" class="nav-link <?php echo $activePage === 'booking' ? 'active' : ''; ?>">Book Court</a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <a href="<?php echo BASE_URL; ?>/dashboard" class="btn btn-outline">Dashboard</a>
+                        <a href="<?php echo BASE_URL; ?>/logout" class="btn btn-primary">Logout</a>
+                    <?php else: ?>
+                        <a href="<?php echo BASE_URL; ?>/login" class="btn btn-outline">Login</a>
+                        <a href="<?php echo BASE_URL; ?>/register" class="btn btn-primary">Register</a>
+                    <?php endif; ?>
+                </div>
             </div>
-          </div>
-
-          <a href="views/auth/login.php" class="btn btn-outline" id="loginBtn">Login</a>
-          <a href="views/auth/register.php" class="btn btn-primary" id="registerBtn">Register</a>
-
         </div>
+<<<<<<< HEAD
 
         <button class="mobile-menu-toggle">
           <span></span><span></span><span></span>
@@ -171,3 +171,7 @@ if (!isset($activePage)) $activePage = '';
     </nav>
 </header>
 >>>>>>> Stashed changes
+=======
+    </nav>
+</header>
+>>>>>>> 33f0fd7199ed9b6d860ae47c0bc1bd16e492bba8

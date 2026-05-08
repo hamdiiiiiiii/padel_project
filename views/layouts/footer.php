@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <?php
 // footer.php - Reusable footer component
 // Usage: <?php include 'footer.php'; ?>
 ?>
 <!--start Footer Section -->
+=======
+>>>>>>> 33f0fd7199ed9b6d860ae47c0bc1bd16e492bba8
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -48,6 +51,7 @@
     </div>
   </div>
 </footer>
+<<<<<<< HEAD
 <!--end Footer Section -->
 =======
 <footer class="footer">
@@ -97,3 +101,7 @@
 </body>
 </html>
 >>>>>>> Stashed changes
+=======
+</body>
+</html>
+>>>>>>> 33f0fd7199ed9b6d860ae47c0bc1bd16e492bba8
