@@ -11,6 +11,90 @@
   box-shadow: var(--shadow-md);
 }
 
+.hidden {
+  display: none;
+}
+
+.payment-methods {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.payment-methods .btn {
+  min-width: 140px;
+}
+
+.payment-methods .btn.active,
+.payment-methods .btn:hover {
+  border-color: #1a1f71;
+  color: #fff;
+  background: #1a1f71;
+}
+
+.payment-details {
+  border: 1px solid #e3e8ef;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  background: #f7fbff;
+}
+
+.payment-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.visa-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1f71;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.visa-icon {
+  font-size: 22px;
+}
+
+.field-group {
+  margin-top: 15px;
+}
+
+.field-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.field-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: var(--font-family);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .section-header {
   text-align: center;
   margin-bottom: 30px;
