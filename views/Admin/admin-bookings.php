@@ -59,9 +59,8 @@ if($filter_date) {
 }
 
 $sql .= " ORDER BY r.reservation_date DESC, r.start_time DESC";
-
 $stmt = $db->prepare($sql);
-$stmt->execute($params);
+$stmt->execute($params); 
 $bookings = $stmt->fetchAll();
 ?>
 

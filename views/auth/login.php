@@ -1,7 +1,12 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-session_start();
+
+// Only start session if one isn't already active
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . '/../../core/Database.php';
 
 $error = '';
@@ -18,11 +23,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         
+        // Ensure you use 'password_hash' column name from your DB
         if($user && password_verify($password, $user['password_hash'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_role'] = $user['role'];
             
+            // Pro-tip: Check if these paths are correct on your XAMPP setup
             if($user['role'] === 'admin') {
                 header('Location: /padel_project/padel_project/admin.php');
             } else {
