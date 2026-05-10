@@ -8,7 +8,8 @@ require_once __DIR__ . '/controllers/BookingController.php';
 require_once __DIR__ . '/controllers/HomeController.php';
 
 $requestUri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
-$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$basePath = rtrim($basePath, '/');
 define('BASE_URL', ($basePath === '/' || $basePath === '.') ? '' : $basePath);
 
 if ($basePath !== '' && $basePath !== '/') {

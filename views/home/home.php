@@ -28,8 +28,8 @@
               </div>
             </div>
             <div class="hero-cta">
-              <a href="#" class="btn btn-primary btn-large">Book a Court Now</a>
-              <a href="#" class="btn btn-outline btn-large"
+              <a href="<?php echo BASE_URL; ?>/booking" class="btn btn-primary btn-large">Book a Court Now</a>
+              <a href="<?php echo BASE_URL; ?>/courts" class="btn btn-outline btn-large"
                 >View Available Courts</a
               >
             </div>
@@ -55,7 +55,7 @@
                 </div>
               </div>
               <div class="booking-card-footer">
-                <a href="#" class="btn btn-primary btn-block">Start Booking</a>
+                <a href="<?php echo BASE_URL; ?>/booking" class="btn btn-primary btn-block">Start Booking</a>
               </div>
             </div>
           </div>
@@ -200,10 +200,10 @@
             and get instant access to all our courts.
           </p>
           <div class="cta-buttons">
-            <a href="#" class="btn btn-primary btn-large"
+            <a href="<?php echo BASE_URL; ?>/register" class="btn btn-primary btn-large"
               >Create Free Account</a
             >
-            <a href="#" class="btn btn-outline btn-large">View Pricing</a>
+            <a href="<?php echo BASE_URL; ?>/courts" class="btn btn-outline btn-large">View Pricing</a>
           </div>
         </div>
       </div>

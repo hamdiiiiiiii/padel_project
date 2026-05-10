@@ -7,20 +7,24 @@ session_start();
 
 require_once __DIR__ . '/../core/Database.php';
 
-// BASE_URL must point to the project root (two levels up from /booking/process.php)
+// BASE_URL must point to the project root (two levels up from /booking_actions/process.php)
 if (!defined('BASE_URL')) {
-    $scriptDir = dirname(dirname($_SERVER['SCRIPT_NAME']));
+    $scriptDir = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'])));
     $basePath = rtrim($scriptDir, '/');
     define('BASE_URL', ($basePath === '/' || $basePath === '.' || $basePath === '') ? '' : $basePath);
 }
 
 if (!isset($_SESSION['user'])) {
-    header('Location: ' . BASE_URL . '/login');
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $scheme . '://' . $host . BASE_URL . '/login');
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ' . BASE_URL . '/courts');
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $scheme . '://' . $host . BASE_URL . '/courts');
     exit;
 }
 
@@ -138,7 +142,9 @@ try {
     $insertStmt->execute($insertParams);
 
     $db->commit();
-    header('Location: ' . BASE_URL . '/reservations');
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    header('Location: ' . $scheme . '://' . $host . BASE_URL . '/reservations');
     exit;
 } catch (Throwable $e) {
     if ($db->inTransaction()) {
