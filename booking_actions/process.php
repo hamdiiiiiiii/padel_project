@@ -7,10 +7,7 @@ session_start();
 
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/Payment/PaymentContext.php';
-require_once __DIR__ . '/../core/Events/BookingEventEmitter.php';
-require_once __DIR__ . '/../core/Events/Observers/AdminNotificationObserver.php';
-require_once __DIR__ . '/../core/Events/Observers/UserConfirmationObserver.php';
-require_once __DIR__ . '/../core/Events/Observers/EventLogObserver.php';
+require_once __DIR__ . '/../core/Events/BookingEmitterFactory.php';
 
 // BASE_URL must point to the project root (two levels up from /booking_actions/process.php)
 if (!defined('BASE_URL')) {
@@ -135,11 +132,8 @@ try {
 
     $db->commit();
 
-    // --- Observer Pattern: fire ReservationCreated event ---
-    $emitter = new BookingEventEmitter();
-    $emitter->subscribe(new AdminNotificationObserver($db));
-    $emitter->subscribe(new UserConfirmationObserver($db));
-    $emitter->subscribe(new EventLogObserver());
+    // --- Factory Pattern: build the emitter with all observers ---
+    $emitter = BookingEmitterFactory::create($db);
     $emitter->emit([
         'reservation_id' => $reservationId,
         'user_id'        => $userId,
