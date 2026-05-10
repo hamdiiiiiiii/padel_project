@@ -7,6 +7,10 @@ session_start();
 
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/Payment/PaymentContext.php';
+require_once __DIR__ . '/../core/Events/BookingEventEmitter.php';
+require_once __DIR__ . '/../core/Events/Observers/AdminNotificationObserver.php';
+require_once __DIR__ . '/../core/Events/Observers/UserConfirmationObserver.php';
+require_once __DIR__ . '/../core/Events/Observers/EventLogObserver.php';
 
 // BASE_URL must point to the project root (two levels up from /booking_actions/process.php)
 if (!defined('BASE_URL')) {
@@ -53,6 +57,11 @@ $startTime = date('H:i:s', strtotime($rawStartTime));
 $endTime = date('H:i:s', strtotime($rawEndTime));
 
 $db = Database::getInstance()->getConnection();
+
+// Fetch court name for use in event notifications
+$courtRow  = $db->prepare('SELECT name FROM courts WHERE id = :id LIMIT 1');
+$courtRow->execute(['id' => $courtId]);
+$courtName = (string) ($courtRow->fetchColumn() ?: 'Unknown Court');
 
 try {
     $db->beginTransaction();
@@ -122,7 +131,28 @@ try {
     $insertStmt = $db->prepare($insertSql);
     $insertStmt->execute($insertParams);
 
+    $reservationId = (int) $db->lastInsertId();
+
     $db->commit();
+
+    // --- Observer Pattern: fire ReservationCreated event ---
+    $emitter = new BookingEventEmitter();
+    $emitter->subscribe(new AdminNotificationObserver($db));
+    $emitter->subscribe(new UserConfirmationObserver($db));
+    $emitter->subscribe(new EventLogObserver());
+    $emitter->emit([
+        'reservation_id' => $reservationId,
+        'user_id'        => $userId,
+        'user_name'      => $_SESSION['user']['name'] ?? 'Unknown',
+        'court_id'       => $courtId,
+        'court_name'     => $courtName,
+        'date'           => $date,
+        'start_time'     => $startTime,
+        'end_time'       => $endTime,
+        'payment_type'   => $paymentContext->getType(),
+        'total_price'    => $totalPrice,
+    ]);
+
     $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
     header('Location: ' . $scheme . '://' . $host . BASE_URL . '/reservations');

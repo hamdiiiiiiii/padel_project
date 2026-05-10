@@ -34,12 +34,50 @@ $sql = 'SELECT ' . implode(', ', $selectParts) . '
 $stmt = $db->prepare($sql);
 $stmt->execute(['user_id' => $userId]);
 $reservations = $stmt->fetchAll();
+
+// --- Observer Pattern: fetch and display unread confirmation notifications ---
+$notifications = [];
+try {
+    $notifStmt = $db->prepare(
+        'SELECT id, message FROM notifications
+         WHERE type = :type AND user_id = :user_id AND is_read = 0
+         ORDER BY created_at DESC'
+    );
+    $notifStmt->execute(['type' => 'user', 'user_id' => $userId]);
+    $notifications = $notifStmt->fetchAll();
+
+    if (!empty($notifications)) {
+        $ids = implode(',', array_map(static fn($n) => (int) $n['id'], $notifications));
+        $db->exec("UPDATE notifications SET is_read = 1 WHERE id IN ({$ids})");
+    }
+} catch (\Throwable $e) {
+    // Non-fatal — notifications are a convenience feature
+    $notifications = [];
+}
+
 ?>
 
 <section style="margin-top:120px;">
     <div class="container">
         <div class="card">
             <h1>My Reservations</h1>
+
+            <?php if (!empty($notifications)): ?>
+                <div class="notification-banner" style="
+                    background: linear-gradient(135deg, #1a7a4a, #22c55e);
+                    color: #fff;
+                    border-radius: 10px;
+                    padding: 14px 20px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 4px 15px rgba(34,197,94,0.3);
+                ">
+                    <?php foreach ($notifications as $notif): ?>
+                        <p style="margin: 4px 0; font-size: 0.95rem;">
+                            ✅ <?php echo htmlspecialchars($notif['message']); ?>
+                        </p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
             <?php if (empty($reservations)): ?>
                 <p>No reservations found.</p>
