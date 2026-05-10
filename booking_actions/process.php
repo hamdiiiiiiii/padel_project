@@ -6,6 +6,7 @@ ini_set('display_errors', '1');
 session_start();
 
 require_once __DIR__ . '/../core/Database.php';
+require_once __DIR__ . '/../core/Payment/PaymentContext.php';
 
 // BASE_URL must point to the project root (two levels up from /booking_actions/process.php)
 if (!defined('BASE_URL')) {
@@ -34,37 +35,17 @@ $date = trim($_POST['date'] ?? '');
 $rawStartTime = trim($_POST['start_time'] ?? '');
 $rawEndTime = trim($_POST['end_time'] ?? '');
 $totalPrice = (float) ($_POST['total_price'] ?? 0);
-$paymentType = trim($_POST['payment_type'] ?? 'on_court');
-if ($paymentType === 'visa') {
-    $paymentType = 'online';
-}
+$rawPaymentType = trim($_POST['payment_type'] ?? 'on_court');
 
 if ($courtId <= 0 || $date === '' || $rawStartTime === '' || $rawEndTime === '') {
     die('Missing required booking data.');
 }
 
-if ($paymentType === 'online') {
-    $cardHolderName = trim($_POST['card_holder_name'] ?? '');
-    $cardNumber = preg_replace('/\D/', '', (string) ($_POST['card_number'] ?? ''));
-    $expiryDate = trim($_POST['expiry_date'] ?? '');
-    $cvv = trim($_POST['cvv'] ?? '');
-
-    if ($cardHolderName === '' || !preg_match('/^\d{13,19}$/', $cardNumber) || !preg_match('/^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/', $expiryDate) || !preg_match('/^\d{3,4}$/', $cvv)) {
-        die('Invalid Visa payment details.');
-    }
-
-    [$expiryMonth, $expiryYear] = explode('/', $expiryDate);
-    $expiryMonth = (int) $expiryMonth;
-    $expiryYear = (int) $expiryYear;
-    if ($expiryYear < 100) {
-        $expiryYear += 2000;
-    }
-
-    $expiry = DateTime::createFromFormat('Y-m-d', sprintf('%04d-%02d-01', $expiryYear, $expiryMonth));
-    $current = new DateTime('first day of this month');
-    if ($expiry === false || $expiry < $current) {
-        die('Visa card has expired.');
-    }
+// --- Strategy Pattern: delegate payment validation to PaymentContext ---
+try {
+    $paymentContext = new PaymentContext($rawPaymentType, $_POST);
+} catch (\InvalidArgumentException $e) {
+    die('Payment validation failed: ' . $e->getMessage());
 }
 
 // Convert "1 PM" format to MySQL "13:00:00" format
@@ -123,7 +104,7 @@ try {
     }
     if (in_array('payment_type', $colNames, true)) {
         $insertFields[] = 'payment_type';
-        $insertParams['payment_type'] = $paymentType;
+        $insertParams['payment_type'] = $paymentContext->getType();
     }
     if (in_array('status', $colNames, true)) {
         $insertFields[] = 'status';
@@ -131,7 +112,7 @@ try {
     }
     if (in_array('payment_status', $colNames, true)) {
         $insertFields[] = 'payment_status';
-        $insertParams['payment_status'] = $paymentType === 'on_court' ? 'pending' : 'paid';
+        $insertParams['payment_status'] = $paymentContext->getPaymentStatus();
     }
 
     $fieldSql = implode(', ', $insertFields);
