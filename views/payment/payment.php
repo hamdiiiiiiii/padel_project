@@ -35,7 +35,7 @@ $price = trim($_GET['price'] ?? '0');
 
         <div class="card">
             <h3>Payment Method</h3>
-            <form id="paymentForm" method="POST" action="<?php echo BASE_URL; ?>/booking_actions/process.php">
+            <form id="paymentForm" method="POST" action="<?php echo BASE_URL; ?>/booking/process">
                 <div class="payment-methods">
                     <button id="onCourtBtn" type="button" class="btn btn-secondary">Pay On Court</button>
                     <button id="visaBtn" type="button" class="btn btn-secondary">Pay by Visa</button>

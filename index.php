@@ -86,6 +86,16 @@ if ($path === '/reservation') {
     exit;
 }
 
+if ($path === '/booking/process' && $method === 'POST') {
+    (new BookingController())->processBooking();
+    exit;
+}
+
+if ($path === '/booking/cancel' && $method === 'GET') {
+    (new BookingController())->cancelBooking();
+    exit;
+}
+
 // Admin Routes
 if ($path === '/admin' && $method === 'GET') { (new AdminController())->dashboard(); exit; }
 

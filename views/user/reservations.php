@@ -101,7 +101,7 @@ try {
                         <p><strong>Payment Status:</strong> <?php echo htmlspecialchars((string) ($reservation['payment_status'] ?? 'pending')); ?></p>
 
                         <?php if (($reservation['status'] ?? '') !== 'cancelled'): ?>
-                            <a class="btn btn-outline" href="<?php echo BASE_URL; ?>/booking_actions/cancel.php?id=<?php echo (int) $reservation['id']; ?>">
+                            <a class="btn btn-outline" href="<?php echo BASE_URL; ?>/booking/cancel?id=<?php echo (int) $reservation['id']; ?>">
                                 Cancel Booking
                             </a>
                         <?php endif; ?>
