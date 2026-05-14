@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $baseUrl = defined('BASE_URL') ? BASE_URL : '';
             if($user['role'] === 'admin') {
-                header('Location: ' . $baseUrl . '/views/Admin/admin.php');
+                header('Location: ' . $baseUrl . '/admin');
             } else {
                 header('Location: ' . $baseUrl . '/home');
             }

@@ -1,70 +1,3 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-session_start();
-
-require_once __DIR__ . '/../../core/Database.php';
-
-// Admin access check
-if(!isset($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'admin') {
-    header('Location: ../../login');
-    exit();
-}
-
-$db = Database::getInstance()->getConnection();
-
-// Handle Status Update
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
-    $booking_id = (int)$_POST['booking_id'];
-    $new_status = $_POST['new_status'];
-    
-    $stmt = $db->prepare("UPDATE reservations SET status = ? WHERE id = ?");
-    $stmt->execute([$new_status, $booking_id]);
-    
-    header('Location: admin-bookings.php');
-    exit();
-}
-
-// Handle Delete Booking
-if(isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    $stmt = $db->prepare("DELETE FROM reservations WHERE id = ?");
-    $stmt->execute([$id]);
-    header('Location: admin-bookings.php');
-    exit();
-}
-
-// Get filter values
-$filter_status = $_GET['status'] ?? 'all';
-$filter_date = $_GET['date'] ?? '';
-
-// Build query
-$sql = "
-    SELECT r.*, u.name as user_name, u.email as user_email, c.name as court_name 
-    FROM reservations r
-    JOIN users u ON r.user_id = u.id
-    JOIN courts c ON r.court_id = c.id
-    WHERE 1=1
-";
-$params = [];
-
-if($filter_status !== 'all') {
-    $sql .= " AND r.status = ?";
-    $params[] = $filter_status;
-}
-
-if($filter_date) {
-    $sql .= " AND r.reservation_date = ?";
-    $params[] = $filter_date;
-}
-
-$sql .= " ORDER BY r.reservation_date DESC, r.start_time DESC";
-
-$stmt = $db->prepare($sql);
-$stmt->execute($params);
-$bookings = $stmt->fetchAll();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +5,7 @@ $bookings = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Manage Bookings - PadelPro Admin</title>
 
-    <link rel="stylesheet" href="../../css/admin-home.css"/>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin-home.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
@@ -84,16 +17,16 @@ $bookings = $stmt->fetchAll();
     <nav class="navbar">
         <div class="container">
             <div class="nav-wrapper">
-                <a href="admin.php" class="logo">
+                <a href="<?= BASE_URL ?>/admin" class="logo">
                     <span class="logo-icon">🎾</span>
                     <span class="logo-text">PadelPro Admin</span>
                 </a>
                 <ul class="nav-menu">
-                    <li><a href="admin.php" class="nav-link">Dashboard</a></li>
-                    <li><a href="admin-courts.php" class="nav-link">Courts</a></li>
-                    <li><a href="admin-bookings.php" class="nav-link active">Bookings</a></li>
-                    <li><a href="admin-users.php" class="nav-link">Users</a></li>
-                    <li><a href="admin-payments.php" class="nav-link">Payments</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin" class="nav-link">Dashboard</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin/courts" class="nav-link">Courts</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin/bookings" class="nav-link active">Bookings</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin/users" class="nav-link">Users</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin/payments" class="nav-link">Payments</a></li>
                 </ul>
                 
             </div>
@@ -112,7 +45,7 @@ $bookings = $stmt->fetchAll();
 
         <!-- FILTER BAR -->
         <div class="filter-bar">
-            <form method="GET" action="" class="filter-form" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <form method="GET" action="<?= BASE_URL ?>/admin/bookings" class="filter-form" style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <select name="status">
                     <option value="all" <?= $filter_status == 'all' ? 'selected' : '' ?>>All Status</option>
                     <option value="pending" <?= $filter_status == 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -126,7 +59,7 @@ $bookings = $stmt->fetchAll();
                 <button type="submit" class="btn btn-primary">Filter</button>
                 
                 <?php if($filter_status != 'all' || $filter_date): ?>
-                    <a href="admin-bookings.php" class="btn btn-outline">Clear Filters</a>
+                    <a href="<?= BASE_URL ?>/admin/bookings" class="btn btn-outline">Clear Filters</a>
                 <?php endif; ?>
             </form>
         </div>
@@ -164,7 +97,7 @@ $bookings = $stmt->fetchAll();
                                 </span>
                             </td>
                             <td>
-                                <form method="POST" style="display: inline-block;" onsubmit="return confirm('Update booking status?')">
+                                <form method="POST" action="<?= BASE_URL ?>/admin/bookings/update" style="display: inline-block;" onsubmit="return confirm('Update booking status?')">
                                     <input type="hidden" name="action" value="update_status">
                                     <input type="hidden" name="booking_id" value="<?= $booking['id'] ?>">
                                     <select name="new_status" onchange="this.form.submit()" style="padding: 5px;">
@@ -174,7 +107,7 @@ $bookings = $stmt->fetchAll();
                                         <option value="cancelled" <?= $booking['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                                     </select>
                                 </form>
-                                <a href="?delete=<?= $booking['id'] ?>" class="action-btn cancel-btn" onclick="return confirm('Delete this booking?')">Delete</a>
+                                <a href="<?= BASE_URL ?>/admin/bookings/delete?delete=<?= $booking['id'] ?>" class="action-btn cancel-btn" onclick="return confirm('Delete this booking?')">Delete</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

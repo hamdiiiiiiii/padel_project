@@ -37,7 +37,11 @@
                 </ul>
                 <div class="nav-actions">
                     <?php if (isset($_SESSION['user'])): ?>
-                        <a href="<?php echo BASE_URL; ?>/dashboard" class="btn btn-outline">Dashboard</a>
+                        <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
+                            <a href="<?php echo BASE_URL; ?>/admin" class="btn btn-outline">Admin Panel</a>
+                        <?php else: ?>
+                            <a href="<?php echo BASE_URL; ?>/dashboard" class="btn btn-outline">Dashboard</a>
+                        <?php endif; ?>
                         <a href="<?php echo BASE_URL; ?>/logout" class="btn btn-primary">Logout</a>
                     <?php else: ?>
                         <a href="<?php echo BASE_URL; ?>/login" class="btn btn-outline">Login</a>
