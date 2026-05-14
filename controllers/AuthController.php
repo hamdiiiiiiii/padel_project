@@ -40,7 +40,7 @@ class AuthController extends Controller
             ];
             
             if (($_SESSION['user']['role'] ?? '') === 'admin') {
-                $this->redirect('/views/admin/admin.php');
+                $this->redirect('/admin');
             } else {
                 $this->redirect('/home');
             }
