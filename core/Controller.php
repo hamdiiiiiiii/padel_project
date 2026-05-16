@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/AuthGuard.php';
+
 class Controller
 {
     protected function render(string $view, array $data = []): void
@@ -24,5 +26,23 @@ class Controller
     protected function isLoggedIn(): bool
     {
         return isset($_SESSION['user']);
+    }
+
+    /**
+     * Halt with redirect to /login if the visitor is not authenticated.
+     * Delegates to AuthGuard — single source of truth for auth logic.
+     */
+    protected function requireLogin(): void
+    {
+        AuthGuard::requireLogin();
+    }
+
+    /**
+     * Halt with redirect if the visitor is not an authenticated admin.
+     * Delegates to AuthGuard — single source of truth for auth logic.
+     */
+    protected function requireAdmin(): void
+    {
+        AuthGuard::requireAdmin();
     }
 }

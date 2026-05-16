@@ -13,10 +13,8 @@ class AdminController extends Controller
             session_start();
         }
 
-        // Admin access check
-        if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'admin') {
-            $this->redirect('/login');
-        }
+        // Admin access check — delegates to AuthGuard (SRP, DRY)
+        $this->requireAdmin();
 
         $this->db = Database::getInstance()->getConnection();
     }

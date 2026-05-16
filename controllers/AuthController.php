@@ -5,6 +5,10 @@ require_once __DIR__ . '/../models/User.php';
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private readonly User $userModel = new User()
+    ) {}
+
     public function login(): void
     {
         if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
@@ -26,8 +30,7 @@ class AuthController extends Controller
             $this->redirect('/login');
         }
 
-        $userModel = new User();
-        $user = $userModel->findByEmail($email);
+        $user = $this->userModel->findByEmail($email);
 
         $storedHash = $user['password_hash'] ?? ($user['password'] ?? '');
 
@@ -110,8 +113,7 @@ class AuthController extends Controller
             return;
         }
 
-        $userModel = new User();
-        $existing = $userModel->findByEmail($email);
+        $existing = $this->userModel->findByEmail($email);
 
         if ($existing) {
             $this->render('auth/register', [
@@ -122,7 +124,7 @@ class AuthController extends Controller
             return;
         }
 
-        $created = $userModel->create([
+        $created = $this->userModel->create([
             'name' => $name,
             'email' => $email,
             'password' => $password,

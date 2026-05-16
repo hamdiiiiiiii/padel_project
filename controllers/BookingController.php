@@ -6,13 +6,17 @@ require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/Payment/PaymentContext.php';
 require_once __DIR__ . '/../core/Events/BookingEmitterFactory.php';
 require_once __DIR__ . '/../models/Court.php';
+require_once __DIR__ . '/../models/Reservation.php';
 
 class BookingController extends Controller
 {
+    public function __construct(
+        private readonly Court $courtModel = new Court(),
+        private readonly Reservation $reservationModel = new Reservation()
+    ) {}
     public function booking(): void
     {
-        $courtModel = new Court();
-        $courts = $courtModel->getAll();
+        $courts = $this->courtModel->getAll();
 
         $this->render('booking/booking', [
             'activePage' => 'booking',
@@ -47,9 +51,7 @@ class BookingController extends Controller
     public function processBooking(): void
     {
         // Auth guard — must be logged in
-        if (!$this->isLoggedIn()) {
-            $this->redirect('/login');
-        }
+        $this->requireLogin();
 
         $userId         = (int) $_SESSION['user']['id'];
         $courtId        = (int) ($_POST['court_id'] ?? 0);
@@ -175,9 +177,7 @@ class BookingController extends Controller
     public function cancelBooking(): void
     {
         // Auth guard — must be logged in
-        if (!$this->isLoggedIn()) {
-            $this->redirect('/login');
-        }
+        $this->requireLogin();
 
         $reservationId = (int) ($_GET['id'] ?? 0);
         $userId        = (int) $_SESSION['user']['id'];

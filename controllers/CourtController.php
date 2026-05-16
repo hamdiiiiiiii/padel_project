@@ -5,10 +5,13 @@ require_once __DIR__ . '/../models/Court.php';
 
 class CourtController extends Controller
 {
+    public function __construct(
+        private readonly Court $courtModel = new Court()
+    ) {}
+
     public function index(): void
     {
-        $courtModel = new Court();
-        $courts = $courtModel->getAll();
+        $courts = $this->courtModel->getAll();
 
         $this->render('courts/index', [
             'courts' => $courts,
@@ -18,8 +21,7 @@ class CourtController extends Controller
 
     public function show(int $id): void
     {
-        $courtModel = new Court();
-        $court = $courtModel->find($id);
+        $court = $this->courtModel->find($id);
 
         if (!$court) {
             http_response_code(404);

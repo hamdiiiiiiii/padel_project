@@ -5,14 +5,15 @@ require_once __DIR__ . '/../models/Reservation.php';
 
 class UserController extends Controller
 {
+    public function __construct(
+        private readonly Reservation $reservationModel = new Reservation()
+    ) {}
+
     public function dashboard(): void
     {
-        if (!$this->isLoggedIn()) {
-            $this->redirect('/login');
-        }
+        $this->requireLogin();
 
-        $reservationModel = new Reservation();
-        $bookings = $reservationModel->getUserReservations((int) $_SESSION['user']['id']);
+        $bookings = $this->reservationModel->getUserReservations((int) $_SESSION['user']['id']);
 
         $this->render('user/dashboard', [
             'bookings' => $bookings,
@@ -22,9 +23,7 @@ class UserController extends Controller
 
     public function reservations(): void
     {
-        if (!$this->isLoggedIn()) {
-            $this->redirect('/login');
-        }
+        $this->requireLogin();
 
         $this->render('user/reservations', [
             'activePage' => '',
