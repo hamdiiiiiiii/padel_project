@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your PadelPro account - Join the best padel court booking platform">
+    <title>PadelPro - Create Account</title>
+    <link rel="stylesheet" href="css/signup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div class="logo">
+                    <span class="logo-icon">🎾</span>
+                    <span class="logo-text">PadelPro</span>
+                </div>
+                <h2>Create Your Account</h2>
+                <p>Join the best padel court booking platform</p>
+            </div>
+
+            <div class="register-body">
+                <div id="alertMessage" class="alert-message" style="display: none;"></div>
+                
+                <form id="registerForm" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">
+                                <i class="fas fa-user"></i>
+                                First Name
+                            </label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+                            <div class="error-message" id="firstNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">
+                                <i class="fas fa-user"></i>
+                                Last Name
+                            </label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+                            <div class="error-message" id="lastNameError"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                        </label>
+                        <input type="email" id="email" name="email" placeholder="example@domain.com" required>
+                        <div class="error-message" id="emailError"></div>
+                        <div class="hint-text">
+                            <i class="fas fa-info-circle"></i>
+                            Must contain @, domain (e.g., .com), and no spaces
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                            <button type="button" class="toggle-password" data-target="password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="passwordError"></div>
+                        <div class="password-requirements">
+                            <div class="requirement" id="reqUppercase">
+                                <i class="far fa-circle"></i>
+                                <span>At least 1 uppercase letter (A-Z)</span>
+                            </div>
+                            <div class="requirement" id="reqLowercase">
+                                <i class="far fa-circle"></i>
+                                <span>At least 1 lowercase letter (a-z)</span>
+                            </div>
+                            <div class="requirement" id="reqNumber">
+                                <i class="far fa-circle"></i>
+                                <span>At least 1 number (0-9)</span>
+                            </div>
+                            <div class="requirement" id="reqSpecial">
+                                <i class="far fa-circle"></i>
+                                <span>At least 1 special character (!@#$%^&*)</span>
+                            </div>
+                            <div class="requirement" id="reqLength">
+                                <i class="far fa-circle"></i>
+                                <span>Minimum 8 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">
+                            <i class="fas fa-lock"></i>
+                            Confirm Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                            <button type="button" class="toggle-password" data-target="confirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="gender-label">
+                            <i class="fas fa-venus-mars"></i>
+                            Gender
+                        </label>
+                        <div class="gender-options">
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="male" required>
+                                <span class="gender-checkmark">
+                                    <i class="fas fa-mars"></i>
+                                    Male
+                                </span>
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="female" required>
+                                <span class="gender-checkmark">
+                                    <i class="fas fa-venus"></i>
+                                    Female
+                                </span>
+                            </label>
+
+                        </div>
+                        <div class="error-message" id="genderError"></div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+
+                    <div class="login-link">
+                        Already have an account? <a href="#">Sign in here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('registerForm');
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const genderRadios = document.querySelectorAll('input[name="gender"]');
+        const alertMessage = document.getElementById('alertMessage');
+
+        // Helper function to show alert
+        function showAlert(message, type) {
+            alertMessage.style.display = 'block';
+            alertMessage.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+            alertMessage.className = `alert-message alert-${type}`;
+            
+            setTimeout(() => {
+                alertMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Clear error for specific field
+        function clearError(fieldId) {
+            const errorDiv = document.getElementById(`${fieldId}Error`);
+            if (errorDiv) errorDiv.textContent = '';
+        }
+
+        // Set error for specific field
+        function setError(fieldId, message) {
+            const errorDiv = document.getElementById(`${fieldId}Error`);
+            if (errorDiv) errorDiv.textContent = message;
+        }
+
+        // Validate First Name
+        function validateFirstName() {
+            const value = firstName.value.trim();
+            clearError('firstName');
+            
+            if (!value) {
+                setError('firstName', 'First name is required');
+                return false;
+            }
+            if (value.length < 2) {
+                setError('firstName', 'First name must be at least 2 characters');
+                return false;
+            }
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+                setError('firstName', 'First name can only contain letters');
+                return false;
+            }
+            return true;
+        }
+
+        // Validate Last Name
+        function validateLastName() {
+            const value = lastName.value.trim();
+            clearError('lastName');
+            
+            if (!value) {
+                setError('lastName', 'Last name is required');
+                return false;
+            }
+            if (value.length < 2) {
+                setError('lastName', 'Last name must be at least 2 characters');
+                return false;
+            }
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+                setError('lastName', 'Last name can only contain letters');
+                return false;
+            }
+            return true;
+        }
+
+        // Validate Email
+        function validateEmail() {
+            const value = email.value.trim();
+            clearError('email');
+            
+            if (!value) {
+                setError('email', 'Email address is required');
+                return false;
+            }
+            
+            // Check for spaces
+            if (value.includes(' ')) {
+                setError('email', 'Email cannot contain spaces');
+                return false;
+            }
+            
+            // Check for @ symbol
+            if (!value.includes('@')) {
+                setError('email', 'Email must contain @ symbol');
+                return false;
+            }
+            
+            // Check for domain with dot
+            const atIndex = value.indexOf('@');
+            const domainPart = value.substring(atIndex);
+            if (!domainPart.includes('.')) {
+                setError('email', 'Email must contain a domain (e.g., .com, .org)');
+                return false;
+            }
+            
+            // Check if domain has at least one dot after @
+            const lastDot = domainPart.lastIndexOf('.');
+            if (lastDot === -1 || lastDot === domainPart.length - 1) {
+                setError('email', 'Invalid domain format');
+                return false;
+            }
+            
+            // Full email regex validation
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                setError('email', 'Please enter a valid email address');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Update password requirement UI
+        function updateRequirement(element, isValid, text) {
+            if (isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+                element.innerHTML = `<i class="fas fa-check-circle"></i><span>${text}</span>`;
+            } else {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+                element.innerHTML = `<i class="far fa-circle"></i><span>${text}</span>`;
+            }
+        }
+
+        // Validate Password strength
+        function validatePassword() {
+            const value = password.value;
+            clearError('password');
+            
+            const hasUppercase = /[A-Z]/.test(value);
+            const hasLowercase = /[a-z]/.test(value);
+            const hasNumber = /[0-9]/.test(value);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+            const hasMinLength = value.length >= 8;
+            
+            // Update UI requirements
+            updateRequirement(reqUppercase, hasUppercase, 'At least 1 uppercase letter (A-Z)');
+            updateRequirement(reqLowercase, hasLowercase, 'At least 1 lowercase letter (a-z)');
+            updateRequirement(reqNumber, hasNumber, 'At least 1 number (0-9)');
+            updateRequirement(reqSpecial, hasSpecial, 'At least 1 special character (!@#$%^&*)');
+            updateRequirement(reqLength, hasMinLength, 'Minimum 8 characters');
+            
+            const isValid = hasUppercase && hasLowercase && hasNumber && hasSpecial && hasMinLength;
+            
+            if (value && !isValid) {
+                setError('password', 'Password does not meet all requirements');
+            }
+            
+            // Re-validate confirm password if it has a value
+            if (confirmPassword.value) {
+                validateConfirmPassword();
+            }
+            
+            return isValid;
+        }
+
+        // Validate Confirm Password
+        function validateConfirmPassword() {
+            const passwordValue = password.value;
+            const confirmValue = confirmPassword.value;
+            clearError('confirmPassword');
+            
+            if (!confirmValue) {
+                setError('confirmPassword', 'Please confirm your password');
+                return false;
+            }
+            
+            if (passwordValue !== confirmValue) {
+                setError('confirmPassword', 'Passwords do not match');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Validate Gender
+        function validateGender() {
+            let selected = false;
+            let selectedValue = '';
+            genderRadios.forEach(radio => {
+                if (radio.checked) {
+                    selected = true;
+                    selectedValue = radio.value;
+                }
+            });
+            
+            clearError('gender');
+            if (!selected) {
+                setError('gender', 'Please select your gender');
+                return false;
+            }
+            return true;
+        }
+
+        // Real-time validation events
+        firstName.addEventListener('input', validateFirstName);
+        lastName.addEventListener('input', validateLastName);
+        email.addEventListener('input', validateEmail);
+        password.addEventListener('input', validatePassword);
+        confirmPassword.addEventListener('input', validateConfirmPassword);
+        genderRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                clearError('gender');
+            });
+        });
+
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate all fields
+            const isFirstNameValid = validateFirstName();
+            const isLastNameValid = validateLastName();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            const isGenderValid = validateGender();
+            
+            if (isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && isGenderValid) {
+                // Get selected gender
+                let selectedGender = '';
+                genderRadios.forEach(radio => {
+                    if (radio.checked) selectedGender = radio.value;
+                });
+                
+                // Create user object
+                const userData = {
+                    firstName: firstName.value.trim(),
+                    lastName: lastName.value.trim(),
+                    email: email.value.trim(),
+                    password: password.value,
+                    gender: selectedGender,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Get existing users or initialize empty array
+                let users = JSON.parse(localStorage.getItem('padelpro_users') || '[]');
+                
+                // Check if email already exists
+                if (users.some(u => u.email === userData.email)) {
+                    showAlert('This email is already registered. Please login instead.', 'error');
+                    return;
+                }
+                
+                // Save user
+                users.push(userData);
+                localStorage.setItem('padelpro_users', JSON.stringify(users));
+                
+                // Store current user session
+                localStorage.setItem('padelpro_current_user', JSON.stringify({
+                    name: `${userData.firstName} ${userData.lastName}`,
+                    email: userData.email,
+                    gender: userData.gender
+                }));
+                
+                showAlert('Account created successfully! Redirecting to home page...', 'success');
+                
+                // Redirect to home page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                showAlert('Please fix the errors above before submitting.', 'error');
+            }
+        });
+
+        // Requirement elements references
+        const reqUppercase = document.getElementById('reqUppercase');
+        const reqLowercase = document.getElementById('reqLowercase');
+        const reqNumber = document.getElementById('reqNumber');
+        const reqSpecial = document.getElementById('reqSpecial');
+        const reqLength = document.getElementById('reqLength');
+    </script>
+</body>
+</html>

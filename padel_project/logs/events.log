@@ -1,0 +1,4 @@
+[2026-05-10 23:52:17] ReservationCreated | id=12 user_id=1 user="Admin User" court="Central Court" date=2026-05-17 time=14:00-15:00 payment=on_court price=400.00
+[2026-05-17 02:32:44] ReservationCreated | id=4 user_id=5 user="hatem shetiah" court="Court 1" date=2026-05-18 time=01:00-02:00 payment=on_court price=500.00
+[2026-05-17 02:34:54] ReservationCreated | id=5 user_id=5 user="hatem shetiah" court="Court 1" date=2026-05-17 time=23:00-12:00 payment=on_court price=400.00
+[2026-05-17 03:01:12] ReservationCreated | id=6 user_id=5 user="hatem shetiah" court="Court 1" date=2026-05-19 time=22:00-23:00 payment=on_court price=300.00
