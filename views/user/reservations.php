@@ -13,8 +13,6 @@ $userId = (int) $_SESSION['user']['id'];
 
 $reservations = $bookings ?? [];
 
-
-// --- Observer Pattern: fetch and display unread confirmation notifications ---
 $notifications = [];
 try {
     $notifStmt = $db->prepare(
@@ -30,7 +28,7 @@ try {
         $db->exec("UPDATE notifications SET is_read = 1 WHERE id IN ({$ids})");
     }
 } catch (\Throwable $e) {
-    // Non-fatal — notifications are a convenience feature
+    
     $notifications = [];
 }
 
@@ -81,7 +79,13 @@ try {
                         <p><strong>Status:</strong> <?php echo htmlspecialchars((string) ($reservation['status'] ?? 'confirmed')); ?></p>
                         <p><strong>Payment Status:</strong> <?php echo htmlspecialchars((string) ($reservation['payment_status'] ?? 'pending')); ?></p>
 
-                        <?php if (($reservation['status'] ?? '') !== 'cancelled'): ?>
+                        <?php 
+                        $status = $reservation['status'] ?? 'pending';
+                        $resDate = $reservation['reservation_date'] ?? '';
+                        $today = date('Y-m-d');
+                        
+                        if ($status !== 'cancelled' && $status !== 'completed' && $resDate >= $today): 
+                        ?>
                             <a class="btn btn-outline" href="<?php echo BASE_URL; ?>/booking/cancel?id=<?php echo (int) $reservation['id']; ?>">
                                 Cancel Booking
                             </a>

@@ -152,6 +152,12 @@ $price = trim($_GET['price'] ?? '0');
                             e.target.value = formattedValue;
                         });
 
+                        // Prevent numbers in Cardholder Name
+                        const cardHolderInput = document.getElementById('cardHolderName');
+                        cardHolderInput.addEventListener('input', function (e) {
+                            e.target.value = e.target.value.replace(/[0-9]/g, '');
+                        });
+
                         paymentForm.addEventListener('submit', function (event) {
                             if (paymentTypeInput.value !== 'online') { // Fixed: was checking for 'visa'
                                 return;
@@ -174,8 +180,11 @@ $price = trim($_GET['price'] ?? '0');
                                 expiryValid = expDate >= currentMonth;
                             }
 
-                            if (!cardHolder || !/^\d{16}$/.test(cardNumber) || !expiryValid || !/^\d{3,4}$/.test(cvv)) {
-                                alert('Please complete the Visa details with a valid card number (16 digits), expiry date (MM/YY), CVV, and cardholder name.');
+                            // Validate name (only letters and spaces)
+                            const nameValid = /^[a-zA-Z\s]+$/.test(cardHolder);
+
+                            if (!cardHolder || !nameValid || !/^\d{16}$/.test(cardNumber) || !expiryValid || !/^\d{3,4}$/.test(cvv)) {
+                                alert('Please complete the Visa details with a valid cardholder name (letters only), card number (16 digits), expiry date (MM/YY), and CVV.');
                                 event.preventDefault();
                             }
                         });

@@ -2,22 +2,14 @@
 
 require_once __DIR__ . '/../BookingObserver.php';
 
-/**
- * EventLogObserver
- *
- * Appends a timestamped line to logs/events.log every time a new
- * reservation is created. Useful for system-level auditing.
- *
- * Log format:
- *   [2026-05-11 00:38:00] ReservationCreated | id=5 user_id=2 court="Court A" date=2026-05-15 time=10:00-11:00 payment=on_court price=200
- */
+
 class EventLogObserver implements BookingObserver
 {
     private string $logFile;
 
     public function __construct(?string $logFile = null)
     {
-        // Default: <project_root>/logs/events.log
+        
         $this->logFile = $logFile ?? dirname(__DIR__, 3) . '/logs/events.log';
     }
 

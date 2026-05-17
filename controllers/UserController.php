@@ -22,12 +22,5 @@ class UserController extends Controller
     }
 
 
-    public function reservations(): void
-    {
-        $this->requireLogin();
 
-        $this->render('user/reservations', [
-            'activePage' => '',
-        ]);
-    }
 }
