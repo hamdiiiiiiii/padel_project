@@ -33,8 +33,9 @@ class AuthGuard
         self::requireLogin();
 
         if (($_SESSION['user']['role'] ?? '') !== 'admin') {
-            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/home');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/dashboard');
             exit;
         }
     }
+
 }

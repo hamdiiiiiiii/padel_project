@@ -11,37 +11,48 @@ class AuthController extends Controller
 
     public function login(): void
     {
-        if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
-            define('REGISTER_HANDLED_BY_CONTROLLER', true);
-        }
+        // Pick up post-registration success flash
+        $success = $_SESSION['auth_success'] ?? '';
+        unset($_SESSION['auth_success']);
 
         $this->render('auth/login', [
-            'activePage' => '',
-            'pageStyles' => ['css/login_signup.css'],
+            'activePage'  => '',
+            'pageStyles'  => ['css/login.css'],
+            'error'       => '',
+            'success'     => $success,
         ]);
     }
 
     public function doLogin(): void
     {
-        $email = trim($_POST['email'] ?? '');
+        $email    = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
+        $renderError = function (string $msg) use ($email): void {
+            $this->render('auth/login', [
+                'activePage' => '',
+                'pageStyles' => ['css/login.css'],
+                'error'      => $msg,
+                'success'    => '',
+            ]);
+        };
+
         if ($email === '' || $password === '') {
-            $this->redirect('/login');
+            $renderError('Please enter your email and password.');
+            return;
         }
 
         $user = $this->userModel->findByEmail($email);
-
         $storedHash = $user['password_hash'] ?? ($user['password'] ?? '');
 
         if ($user && $storedHash !== '' && password_verify($password, $storedHash)) {
             $_SESSION['user'] = [
-                'id' => $user['id'],
-                'name' => $user['name'],
+                'id'    => $user['id'],
+                'name'  => $user['name'],
                 'email' => $user['email'],
-                'role' => $user['role'] ?? 'user',
+                'role'  => $user['role'] ?? 'user',
             ];
-            
+
             if (($_SESSION['user']['role'] ?? '') === 'admin') {
                 $this->redirect('/admin');
             } else {
@@ -49,18 +60,16 @@ class AuthController extends Controller
             }
         }
 
-        $this->redirect('/login');
+        $renderError('Invalid email or password.');
     }
 
     public function register(): void
     {
-        if (!defined('REGISTER_HANDLED_BY_CONTROLLER')) {
-            define('REGISTER_HANDLED_BY_CONTROLLER', true);
-        }
-
         $this->render('auth/register', [
             'activePage' => '',
-            'pageStyles' => ['css/login_signup.css'],
+            'pageStyles' => ['css/login.css'],
+            'error'      => null,
+            'success'    => null,
         ]);
     }
 
@@ -80,7 +89,7 @@ class AuthController extends Controller
         if ($name === '' || $email === '' || $password === '') {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'Name, email, and password are required.',
             ]);
             return;
@@ -89,7 +98,7 @@ class AuthController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'Please enter a valid email address.',
             ]);
             return;
@@ -98,7 +107,7 @@ class AuthController extends Controller
         if (strlen($password) < 6) {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'Password must be at least 6 characters.',
             ]);
             return;
@@ -107,7 +116,7 @@ class AuthController extends Controller
         if ($password !== $confirmPassword) {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'Password and confirm password do not match.',
             ]);
             return;
@@ -118,7 +127,7 @@ class AuthController extends Controller
         if ($existing) {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'This email is already registered.',
             ]);
             return;
@@ -134,7 +143,7 @@ class AuthController extends Controller
         if (!$created) {
             $this->render('auth/register', [
                 'activePage' => '',
-                'pageStyles' => ['css/login_signup.css'],
+                'pageStyles' => ['css/login.css'],
                 'error' => 'Failed to create account. Please try again.',
             ]);
             return;

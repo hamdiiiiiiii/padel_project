@@ -1,74 +1,10 @@
 <?php
-declare(strict_types=1);
-
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
-require_once __DIR__ . '/../../core/Database.php';
-
-if (!defined('BASE_URL')) {
-    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-    define('BASE_URL', rtrim($scriptDir, '/'));
-}
-
-$activePage = 'register';
-$error = null;
-$success = null;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !defined('REGISTER_HANDLED_BY_CONTROLLER')) {
-    try {
-        $firstName = trim($_POST['first_name'] ?? '');
-        $lastName = trim($_POST['last_name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $password = (string) ($_POST['password'] ?? '');
-        $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
-
-        $name = trim($firstName . ' ' . $lastName);
-
-        if ($name === '' || $email === '' || $password === '') {
-            $error = 'Name, email, and password are required.';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = 'Please enter a valid email address.';
-        } elseif (strlen($password) < 6) {
-            $error = 'Password must be at least 6 characters.';
-        } elseif ($password !== $confirmPassword) {
-            $error = 'Password and confirm password do not match.';
-        } else {
-            $db = Database::getInstance()->getConnection();
-
-            $checkStmt = $db->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
-            $checkStmt->execute(['email' => $email]);
-
-            if ($checkStmt->fetch()) {
-                $error = 'This email is already registered.';
-            } else {
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-                $insertStmt = $db->prepare(
-                    'INSERT INTO users (name, email, password_hash, role) VALUES (:name, :email, :password_hash, :role)'
-                );
-
-                $ok = $insertStmt->execute([
-                    'name' => $name,
-                    'email' => $email,
-                    'password_hash' => $hashedPassword,
-                    'role' => 'user',
-                ]);
-
-                if ($ok) {
-                    $success = 'Registration successful. Redirecting to login...';
-                    header('Refresh: 2; url=' . BASE_URL . '/login');
-                } else {
-                    $error = 'Failed to create account. Please try again.';
-                }
-            }
-        }
-    } catch (Throwable $e) {
-        $error = 'Registration error: ' . $e->getMessage();
-    }
-}
+/**
+ * views/auth/register.php — Pure HTML template.
+ * All logic (validation, DB insert, session, redirects) is in AuthController::doRegister().
+ */
 ?>
+
 
 <section class="auth-section">
     <div class="container">

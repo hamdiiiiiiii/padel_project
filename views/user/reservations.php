@@ -11,29 +11,8 @@ require_once __DIR__ . '/../../core/Database.php';
 $db = Database::getInstance()->getConnection();
 $userId = (int) $_SESSION['user']['id'];
 
-$columns = $db->query('SHOW COLUMNS FROM reservations')->fetchAll();
-$colNames = array_map(static fn(array $c): string => $c['Field'], $columns);
+$reservations = $bookings ?? [];
 
-$selectParts = [
-    'r.id',
-    'c.name AS court_name',
-    in_array('reservation_date', $colNames, true) ? 'r.reservation_date' : 'NULL AS reservation_date',
-    in_array('reservation_time', $colNames, true) ? 'r.reservation_time' : 'NULL AS reservation_time',
-    in_array('start_time', $colNames, true) ? 'r.start_time' : 'NULL AS start_time',
-    in_array('end_time', $colNames, true) ? 'r.end_time' : 'NULL AS end_time',
-    in_array('total_price', $colNames, true) ? 'r.total_price' : 'NULL AS total_price',
-    in_array('status', $colNames, true) ? 'r.status' : "'confirmed' AS status",
-    in_array('payment_status', $colNames, true) ? 'r.payment_status' : "'pending' AS payment_status",
-];
-
-$sql = 'SELECT ' . implode(', ', $selectParts) . '
-        FROM reservations r
-        LEFT JOIN courts c ON c.id = r.court_id
-        WHERE r.user_id = :user_id
-        ORDER BY r.id DESC';
-$stmt = $db->prepare($sql);
-$stmt->execute(['user_id' => $userId]);
-$reservations = $stmt->fetchAll();
 
 // --- Observer Pattern: fetch and display unread confirmation notifications ---
 $notifications = [];
@@ -84,7 +63,9 @@ try {
             <?php else: ?>
                 <?php foreach ($reservations as $reservation): ?>
                     <div class="card">
+                        <p><strong>Venue:</strong> <?php echo htmlspecialchars((string) ($reservation['venue_name'] ?? 'N/A')); ?></p>
                         <p><strong>Court:</strong> <?php echo htmlspecialchars((string) ($reservation['court_name'] ?? 'N/A')); ?></p>
+
                         <p><strong>Date:</strong> <?php echo htmlspecialchars((string) ($reservation['reservation_date'] ?? '-')); ?></p>
                         <p>
                             <strong>Time:</strong>

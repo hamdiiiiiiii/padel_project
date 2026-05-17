@@ -21,7 +21,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-wrapper">
-                <a href="<?php echo BASE_URL; ?>/courts" class="logo">
+                <a href="<?php echo BASE_URL; ?>/home" class="logo">
                     <span class="logo-icon">🎾</span>
                     <span class="logo-text">PadelPro</span>
                 </a>
@@ -33,6 +33,9 @@
                     </li>
                     <li class="nav-item">
                         <a href="<?php echo BASE_URL; ?>/booking" class="nav-link <?php echo $activePage === 'booking' ? 'active' : ''; ?>">Book Court</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?php echo BASE_URL; ?>/about" class="nav-link <?php echo $activePage === 'about' ? 'active' : ''; ?>">About Us</a>
                     </li>
                 </ul>
                 <div class="nav-actions">

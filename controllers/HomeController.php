@@ -16,4 +16,12 @@ class HomeController extends Controller
             'courts' => $courts,
         ]);
     }
+
+    public function about(): void
+    {
+        $this->render('about/index', [
+            'activePage' => 'about',
+            'pageStyles' => [],
+        ]);
+    }
 }

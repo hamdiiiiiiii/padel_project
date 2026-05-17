@@ -93,7 +93,7 @@
             return;
         }
 
-        const url = '<?php echo BASE_URL; ?>/api/check-availability.php?court_id=' + courtId + '&date=' + encodeURIComponent(this.value);
+        const url = '<?php echo BASE_URL; ?>/courts/availability?court_id=' + courtId + '&date=' + encodeURIComponent(this.value);
         const res = await fetch(url);
         const data = await res.json();
         renderSlots(data.success ? data.slots : []);

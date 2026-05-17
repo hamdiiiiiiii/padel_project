@@ -15,11 +15,12 @@ class UserController extends Controller
 
         $bookings = $this->reservationModel->getUserReservations((int) $_SESSION['user']['id']);
 
-        $this->render('user/dashboard', [
+        $this->render('user/reservations', [
             'bookings' => $bookings,
             'user' => $_SESSION['user'],
         ]);
     }
+
 
     public function reservations(): void
     {

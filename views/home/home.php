@@ -29,7 +29,7 @@
             </div>
             <div class="hero-cta">
               <a href="<?php echo BASE_URL; ?>/booking" class="btn btn-primary btn-large">Book a Court Now</a>
-              <a href="<?php echo BASE_URL; ?>/courts" class="btn btn-outline btn-large"
+              <a href="<?php echo BASE_URL; ?>/booking" class="btn btn-outline btn-large"
                 >View Available Courts</a
               >
             </div>
@@ -153,42 +153,7 @@
 
     <!--end Features home Section -->
 
-    <!--start Padel Courts Section -->
-    <section class="courts-preview">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Our Padel Courts</h2>
-          <p class="section-subtitle">
-            Choose from our premium courts at convenient locations
-          </p>
-        </div>
-        <div class="courts-grid">
-          <?php if (!empty($courts)): ?>
-            <?php foreach ($courts as $court): ?>
-              <div class="court-card">
-                <div class="court-image">
-                  <span class="court-icon">🏟️</span>
-                  <?php $statusClass = ($court['status'] ?? 'available') === 'available' ? 'available' : 'busy'; ?>
-                  <span class="court-status <?php echo $statusClass; ?>"><?php echo ucfirst(htmlspecialchars($court['status'] ?? 'Available')); ?></span>
-                </div>
-                <div class="court-details">
-                  <h3 class="court-name"><?php echo htmlspecialchars($court['name']); ?></h3>
-                  <p class="court-location">📍 <?php echo htmlspecialchars($court['location']); ?></p>
-                  <div class="court-info">
-                    <span class="court-price">EGP<?php echo number_format($court['price'] ?? 0); ?>/hour</span>
-                    <span class="court-type"><?php echo htmlspecialchars($court['type'] ?? 'Indoor'); ?></span>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <p>No courts available at the moment.</p>
-          <?php endif; ?>
-        </div>
-      </div>
-    </section>
 
-    <!--end Padel Courts Section -->
 
     <!--satrt Ready to Play Section -->
     <section class="cta">
@@ -203,7 +168,7 @@
             <a href="<?php echo BASE_URL; ?>/register" class="btn btn-primary btn-large"
               >Create Free Account</a
             >
-            <a href="<?php echo BASE_URL; ?>/courts" class="btn btn-outline btn-large">View Pricing</a>
+            <a href="<?php echo BASE_URL; ?>/booking" class="btn btn-outline btn-large">View Pricing</a>
           </div>
         </div>
       </div>

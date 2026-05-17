@@ -25,7 +25,7 @@
 
         <ul class="nav-menu">
           <li><a href="<?= BASE_URL ?>/admin" class="nav-link active">Dashboard</a></li>
-          <li><a href="<?= BASE_URL ?>/admin/courts" class="nav-link">Courts</a></li>
+          <li><a href="<?= BASE_URL ?>/admin/venues" class="nav-link">Venues</a></li>
           <li><a href="<?= BASE_URL ?>/admin/bookings" class="nav-link">Bookings</a></li>
           <li><a href="<?= BASE_URL ?>/admin/users" class="nav-link">Users</a></li>
           <li><a href="<?= BASE_URL ?>/admin/payments" class="nav-link">Payments</a></li>
@@ -83,9 +83,9 @@
 
       <div class="actions-grid">
 
-        <a href="<?= BASE_URL ?>/admin/courts" class="action-card">
+        <a href="<?= BASE_URL ?>/admin/venues" class="action-card">
           <i class="fas fa-plus-circle"></i>
-          <p>Add Court</p>
+          <p>Venues</p>
         </a>
 
         <a href="<?= BASE_URL ?>/admin/bookings" class="action-card">
@@ -125,7 +125,7 @@
           <?php foreach($recentBookings as $booking): ?>
           <tr>
             <td><?= htmlspecialchars($booking['user_name']) ?></td>
-            <td><?= htmlspecialchars($booking['court_name']) ?></td>
+            <td><?= htmlspecialchars($booking['venue_name'] . ' - ' . $booking['court_name']) ?></td>
             <td><?= $booking['reservation_date'] ?></td>
             <td><?= date('g:i A', strtotime($booking['start_time'])) ?></td>
             <td>

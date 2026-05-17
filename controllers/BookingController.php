@@ -7,23 +7,51 @@ require_once __DIR__ . '/../core/Payment/PaymentContext.php';
 require_once __DIR__ . '/../core/Events/BookingEmitterFactory.php';
 require_once __DIR__ . '/../models/Court.php';
 require_once __DIR__ . '/../models/Reservation.php';
+require_once __DIR__ . '/../models/Venue.php';
 
 class BookingController extends Controller
 {
     public function __construct(
         private readonly Court $courtModel = new Court(),
-        private readonly Reservation $reservationModel = new Reservation()
+        private readonly Reservation $reservationModel = new Reservation(),
+        private readonly Venue $venueModel = new Venue()
     ) {}
     public function booking(): void
     {
-        $courts = $this->courtModel->getAll();
+        $venues = $this->venueModel->getAll();
 
         $this->render('booking/booking', [
             'activePage' => 'booking',
             'pageStyles' => ['css/book.css'],
+            'venues'     => $venues,
+        ]);
+    }
+
+    public function venueCourts(): void
+    {
+        $venueId = (int)($_GET['venue_id'] ?? 0);
+        if (!$venueId) {
+            $this->redirect('/booking');
+            return;
+        }
+
+        $venue = $this->venueModel->find($venueId);
+        if (!$venue) {
+            $this->redirect('/booking');
+            return;
+        }
+
+        $courts = $this->courtModel->findByVenue($venueId);
+
+        $this->render('booking/venue_courts', [
+            'activePage' => 'booking',
+            'pageStyles' => ['css/book.css'],
+            'venue'      => $venue,
             'courts'     => $courts,
         ]);
     }
+
+
 
     public function payment(): void
     {
@@ -35,7 +63,7 @@ class BookingController extends Controller
 
     public function reservation(): void
     {
-        $this->render('reservation', [
+        $this->render('booking/reservation', [
             'activePage' => 'booking',
             'pageStyles' => ['css/reservation.css'],
         ]);
@@ -65,6 +93,22 @@ class BookingController extends Controller
             http_response_code(400);
             die('Missing required booking data.');
         }
+
+        // Validate date range (max 1 week in advance)
+        $bookingDateTime = new DateTime($date);
+        $today = new DateTime('today');
+        $maxDate = new DateTime('+7 days');
+
+        if ($bookingDateTime < $today) {
+            http_response_code(400);
+            die('Cannot book a date in the past.');
+        }
+
+        if ($bookingDateTime > $maxDate) {
+            http_response_code(400);
+            die('Reservations are only allowed up to 1 week in advance.');
+        }
+
 
         // --- Strategy Pattern: delegate payment validation to PaymentContext ---
         try {
@@ -218,4 +262,28 @@ class BookingController extends Controller
             die('Cancel failed: ' . $e->getMessage());
         }
     }
-}
+
+    public function checkAvailability(): void
+    {
+        $courtId = (int)($_GET['court_id'] ?? 0);
+        $date = $_GET['date'] ?? '';
+
+        if (!$courtId || !$date) {
+            echo json_encode([]);
+            exit;
+        }
+
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            SELECT HOUR(start_time) as hour 
+            FROM reservations 
+            WHERE court_id = ? AND reservation_date = ? AND status != 'cancelled'
+        ");
+        $stmt->execute([$courtId, $date]);
+        $hours = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        echo json_encode($hours);
+        exit;
+    }
+}
+

@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../core/Model.php';
 
 class Court extends Model
@@ -17,5 +16,14 @@ class Court extends Model
         ]);
 
         return $stmt->fetch();
+    }
+
+    public function findByVenue(int $venueId): array
+    {
+        $stmt = $this->query('SELECT * FROM courts WHERE venue_id = :venue_id ORDER BY name ASC', [
+            'venue_id' => $venueId,
+        ]);
+
+        return $stmt->fetchAll();
     }
 }

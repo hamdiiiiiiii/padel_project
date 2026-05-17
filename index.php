@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/core/Database.php';
-require_once __DIR__ . '/controllers/CourtController.php';
+require_once __DIR__ . '/controllers/VenueController.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/UserController.php';
 require_once __DIR__ . '/controllers/BookingController.php';
@@ -26,13 +26,20 @@ if ($path === '/' || $path === '/home') {
     (new HomeController())->index();
     exit;
 }
-if ($path === '/' || $path === '/courts') {
-    (new CourtController())->index();
+
+if ($path === '/about') {
+    (new HomeController())->about();
     exit;
 }
 
-if (preg_match('#^/court/(\d+)$#', $path, $matches)) {
-    (new CourtController())->show((int) $matches[1]);
+
+if (preg_match('#^/venue/(\d+)$#', $path, $matches)) {
+    (new VenueController())->show((int) $matches[1]);
+    exit;
+}
+
+if ($path === '/venues/availability' && $method === 'GET') {
+    (new VenueController())->checkAvailability();
     exit;
 }
 
@@ -62,12 +69,12 @@ if ($path === '/logout') {
 }
 
 if ($path === '/dashboard') {
-    (new UserController())->reservations();
+    (new UserController())->dashboard();
     exit;
 }
 
 if ($path === '/reservations') {
-    (new UserController())->reservations();
+    (new UserController())->dashboard();
     exit;
 }
 
@@ -86,10 +93,22 @@ if ($path === '/reservation') {
     exit;
 }
 
+if ($path === '/booking/courts' && $method === 'GET') {
+    (new BookingController())->venueCourts();
+    exit;
+}
+
+
+if ($path === '/booking/check-availability' && $method === 'GET') {
+    (new BookingController())->checkAvailability();
+    exit;
+}
+
 if ($path === '/booking/process' && $method === 'POST') {
     (new BookingController())->processBooking();
     exit;
 }
+
 
 if ($path === '/booking/cancel' && $method === 'GET') {
     (new BookingController())->cancelBooking();
@@ -103,10 +122,14 @@ if ($path === '/admin/bookings' && $method === 'GET') { (new AdminController())-
 if ($path === '/admin/bookings/update' && $method === 'POST') { (new AdminController())->updateBooking(); exit; }
 if ($path === '/admin/bookings/delete' && $method === 'GET') { (new AdminController())->deleteBooking(); exit; }
 
+if ($path === '/admin/venues' && $method === 'GET') { (new AdminController())->venues(); exit; }
+if ($path === '/admin/venues/add' && $method === 'POST') { (new AdminController())->addVenue(); exit; }
+if ($path === '/admin/venues/delete' && $method === 'GET') { (new AdminController())->deleteVenue(); exit; }
+if ($path === '/admin/venues/toggle' && $method === 'GET') { (new AdminController())->toggleVenueStatus(); exit; }
+
 if ($path === '/admin/courts' && $method === 'GET') { (new AdminController())->courts(); exit; }
 if ($path === '/admin/courts/add' && $method === 'POST') { (new AdminController())->addCourt(); exit; }
 if ($path === '/admin/courts/delete' && $method === 'GET') { (new AdminController())->deleteCourt(); exit; }
-if ($path === '/admin/courts/toggle' && $method === 'GET') { (new AdminController())->toggleCourtStatus(); exit; }
 
 if ($path === '/admin/payments' && $method === 'GET') { (new AdminController())->payments(); exit; }
 
@@ -114,6 +137,9 @@ if ($path === '/admin/users' && $method === 'GET') { (new AdminController())->us
 if ($path === '/admin/users/add' && $method === 'POST') { (new AdminController())->addUser(); exit; }
 if ($path === '/admin/users/delete' && $method === 'GET') { (new AdminController())->deleteUser(); exit; }
 if ($path === '/admin/users/toggle' && $method === 'GET') { (new AdminController())->toggleUserRole(); exit; }
+
+if ($path === '/admin/generate-slots' && $method === 'GET')  { (new AdminController())->generateSlots(); exit; }
+if ($path === '/admin/generate-slots' && $method === 'POST') { (new AdminController())->generateSlots(); exit; }
 
 http_response_code(404);
 echo 'Page not found.';

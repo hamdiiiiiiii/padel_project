@@ -11,8 +11,15 @@ const pricePerHour = parseInt(urlParams.get("price")) || 400;
 document.getElementById("courtName").innerText = court;
 document.getElementById("courtPrice").innerText = "Price: EGP " + pricePerHour;
 
-// Block past dates
-document.getElementById("dateInput").min = new Date().toISOString().split("T")[0];
+// Block past dates and dates further than 1 week
+const dateInput = document.getElementById("dateInput");
+const today = new Date();
+dateInput.min = today.toISOString().split("T")[0];
+
+const maxDate = new Date();
+maxDate.setDate(today.getDate() + 7);
+dateInput.max = maxDate.toISOString().split("T")[0];
+
 
 // Generate time slots
 const container = document.getElementById("slotsContainer");
@@ -22,15 +29,42 @@ let times = [
   "12 AM - 1 AM","1 AM - 2 AM","2 AM - 3 AM"
 ];
 
-times.forEach(time => {
-  let div = document.createElement("div");
-  div.classList.add("slot");
-  div.innerText = time;
-  div.onclick = function () {
-    toggleSlot(div, time);
-  };
-  container.appendChild(div);
-});
+const hourMapping = {
+  "1 PM - 2 PM": 13, "2 PM - 3 PM": 14, "3 PM - 4 PM": 15, "4 PM - 5 PM": 16,
+  "5 PM - 6 PM": 17, "6 PM - 7 PM": 18, "7 PM - 8 PM": 19, "8 PM - 9 PM": 20,
+  "9 PM - 10 PM": 21, "10 PM - 11 PM": 22, "11 PM - 12 PM": 23,
+  "12 AM - 1 AM": 0, "1 AM - 2 AM": 1, "2 AM - 3 AM": 2
+};
+
+function generateSlots(reservedHours = []) {
+  container.innerHTML = '';
+  times.forEach(time => {
+    let div = document.createElement("div");
+    div.classList.add("slot");
+    div.innerText = time;
+    
+    let hour = hourMapping[time];
+    if (reservedHours.includes(hour)) {
+      div.classList.add("reserved");
+      div.style.background = "rgba(220, 53, 69, 0.2)";
+      div.style.borderColor = "#dc3545";
+      div.style.color = "#dc3545";
+      div.style.cursor = "not-allowed";
+      div.title = "This slot is already reserved.";
+    } else {
+      if (selectedTimes.includes(time)) {
+        div.classList.add("selected");
+      }
+      div.onclick = function () {
+        toggleSlot(div, time);
+      };
+    }
+    container.appendChild(div);
+  });
+}
+
+// Initial generate
+generateSlots();
 
 // SLOT TOGGLE (MULTI SELECT)
 function toggleSlot(element, time) {
@@ -47,8 +81,20 @@ function toggleSlot(element, time) {
 // DATE
 document.getElementById("dateInput").addEventListener("change", function () {
   selectedDate = this.value;
+  selectedTimes = []; // Clear selections on date change
   updateSummary();
+  
+  if (selectedDate) {
+      fetch(BASE_URL_JS + '/booking/check-availability?court_id=' + courtId + '&date=' + selectedDate)
+        .then(response => response.json())
+        .then(reservedHours => {
+          generateSlots(reservedHours.map(Number));
+        });
+  } else {
+      generateSlots();
+  }
 });
+
 
 // SUMMARY
 function updateSummary() {
@@ -74,6 +120,20 @@ function goToPayment() {
     alert("Please select date and at least one time slot!");
     return;
   }
+
+  const bookingDateObj = new Date(selectedDate);
+  const maxDateObj = new Date();
+  maxDateObj.setDate(new Date().getDate() + 7);
+  
+  // Set hours to 0 to compare dates only
+  bookingDateObj.setHours(0,0,0,0);
+  maxDateObj.setHours(0,0,0,0);
+
+  if (bookingDateObj > maxDateObj) {
+    alert("Reservations are only allowed up to 1 week in advance!");
+    return;
+  }
+
 
   const totalPrice = selectedTimes.length * pricePerHour;
   

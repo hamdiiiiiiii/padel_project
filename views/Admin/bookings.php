@@ -23,7 +23,7 @@
                 </a>
                 <ul class="nav-menu">
                     <li><a href="<?= BASE_URL ?>/admin" class="nav-link">Dashboard</a></li>
-                    <li><a href="<?= BASE_URL ?>/admin/courts" class="nav-link">Courts</a></li>
+                    <li><a href="<?= BASE_URL ?>/admin/venues" class="nav-link">Venues</a></li>
                     <li><a href="<?= BASE_URL ?>/admin/bookings" class="nav-link active">Bookings</a></li>
                     <li><a href="<?= BASE_URL ?>/admin/users" class="nav-link">Users</a></li>
                     <li><a href="<?= BASE_URL ?>/admin/payments" class="nav-link">Payments</a></li>
@@ -87,7 +87,7 @@
                         <?php foreach($bookings as $booking): ?>
                         <tr>
                             <td><?= htmlspecialchars($booking['user_name']) ?></td>
-                            <td><?= htmlspecialchars($booking['court_name']) ?></td>
+                            <td><?= htmlspecialchars($booking['venue_name'] . ' - ' . $booking['court_name']) ?></td>
                             <td><?= date('Y-m-d', strtotime($booking['reservation_date'])) ?></td>
                             <td><?= date('g:i A', strtotime($booking['start_time'])) ?> - <?= date('g:i A', strtotime($booking['end_time'])) ?></td>
                             <td>EGP <?= number_format($booking['total_price'], 0) ?></td>
