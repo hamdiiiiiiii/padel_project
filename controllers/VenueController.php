@@ -30,33 +30,5 @@ class VenueController extends Controller
         ]);
     }
 
-    public function checkAvailability(): void
-    {
-        header('Content-Type: application/json');
 
-        try {
-            $courtId  = (int) ($_GET['court_id'] ?? 0);
-            $date     = $_GET['date'] ?? date('Y-m-d');
-
-            if ($courtId <= 0) {
-                echo json_encode(['success' => false, 'message' => 'Invalid court ID']);
-                return;
-            }
-
-            $db = Database::getInstance()->getConnection();
-            $stmt = $db->prepare("
-                SELECT id, start_time, end_time, is_available 
-                FROM time_slots 
-                WHERE court_id = :court_id AND slot_date = :date
-                ORDER BY start_time ASC
-            ");
-            $stmt->execute(['court_id' => $courtId, 'date' => $date]);
-            $slots = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            echo json_encode(['success' => true, 'slots' => $slots]);
-
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
 }
