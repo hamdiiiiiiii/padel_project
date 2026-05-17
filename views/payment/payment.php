@@ -124,8 +124,36 @@ $price = trim($_GET['price'] ?? '0');
 
                         hideVisaFields();
 
+                        // Format Card Number (Space every 4 digits)
+                        const cardNumberInput = document.getElementById('cardNumber');
+                        cardNumberInput.addEventListener('input', function (e) {
+                            let value = e.target.value.replace(/\s+/g, '').replace(/\D/g, '');
+                            let formattedValue = '';
+                            for (let i = 0; i < value.length && i < 16; i++) {
+                                if (i > 0 && i % 4 === 0) {
+                                    formattedValue += ' ';
+                                }
+                                formattedValue += value[i];
+                            }
+                            e.target.value = formattedValue;
+                        });
+
+                        // Format Expiry Date (MM/YY)
+                        const expiryInput = document.getElementById('expiryDate');
+                        expiryInput.addEventListener('input', function (e) {
+                            let value = e.target.value.replace(/\D/g, '');
+                            let formattedValue = '';
+                            if (value.length > 0) {
+                                formattedValue += value.substring(0, 2);
+                            }
+                            if (value.length > 2) {
+                                formattedValue += '/' + value.substring(2, 4);
+                            }
+                            e.target.value = formattedValue;
+                        });
+
                         paymentForm.addEventListener('submit', function (event) {
-                            if (paymentTypeInput.value !== 'visa') {
+                            if (paymentTypeInput.value !== 'online') { // Fixed: was checking for 'visa'
                                 return;
                             }
 
@@ -133,26 +161,25 @@ $price = trim($_GET['price'] ?? '0');
                             const cardNumber = document.querySelector('input[name="card_number"]').value.replace(/\s+/g, '');
                             const expiry = document.querySelector('input[name="expiry_date"]').value.trim();
                             const cvv = document.querySelector('input[name="cvv"]').value.trim();
-                            const expiryMatch = expiry.match(/^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/);
+                            
+                            const expiryMatch = expiry.match(/^(0[1-9]|1[0-2])\/(\d{2})$/); // Strict MM/YY
                             let expiryValid = false;
 
                             if (expiryMatch) {
                                 const month = parseInt(expiryMatch[1], 10);
-                                let year = parseInt(expiryMatch[2], 10);
-                                if (year < 100) {
-                                    year += 2000;
-                                }
+                                let year = parseInt(expiryMatch[2], 10) + 2000;
                                 const expDate = new Date(year, month - 1, 1);
                                 const now = new Date();
                                 const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
                                 expiryValid = expDate >= currentMonth;
                             }
 
-                            if (!cardHolder || !/^\d{13,19}$/.test(cardNumber) || !expiryValid || !/^\d{3,4}$/.test(cvv)) {
-                                alert('Please complete the Visa details with a valid card number, expiry date, CVV, and cardholder name.');
+                            if (!cardHolder || !/^\d{16}$/.test(cardNumber) || !expiryValid || !/^\d{3,4}$/.test(cvv)) {
+                                alert('Please complete the Visa details with a valid card number (16 digits), expiry date (MM/YY), CVV, and cardholder name.');
                                 event.preventDefault();
                             }
                         });
+
                     });
                 </script>
             </form>
