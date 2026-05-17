@@ -76,6 +76,7 @@
                 <thead>
                     <tr>
                         <th>User</th>
+                        <th>Venue</th>
                         <th>Court</th>
                         <th>Amount</th>
                         <th>Method</th>
@@ -86,12 +87,13 @@
                 <tbody>
                     <?php if(count($payments) == 0): ?>
                         <tr>
-                            <td colspan="6" style="text-align: center;">No payments found</td>
+                            <td colspan="7" style="text-align: center;">No payments found</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach($payments as $payment): ?>
                         <tr>
                             <td><?= htmlspecialchars($payment['user_name']) ?></td>
+                            <td><?= htmlspecialchars($payment['venue_name']) ?></td>
                             <td><?= htmlspecialchars($payment['court_name']) ?></td>
                             <td>EGP <?= number_format($payment['total_price'], 0) ?></td>
                             <td><?= ucfirst($payment['payment_type'] ?? 'N/A') ?></td>
